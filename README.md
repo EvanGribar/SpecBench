@@ -1,5 +1,23 @@
 # SpecBench
 
+SpecBench is a local-first benchmark for explicit product-requirement violations in AI code review. v0.3 is an evidence-focused experimental release: it compares a single reviewer, a controlled swarm without debate, and the same swarm with one debate round.
+
+## v0.3 experiment
+
+```bash
+pnpm install
+pnpm validate
+pnpm experiment:v0.3:dry-run
+# Explicit credentials are required for each live command:
+pnpm experiment:v0.3:single-agent
+pnpm experiment:v0.3:swarm-no-debate
+pnpm experiment:v0.3:swarm-with-debate
+pnpm experiment:v0.3:score
+pnpm experiment:v0.3:report
+```
+
+Live runs require `OPENAI_API_KEY`; ordinary validation, tests, and CI never call a model. Raw artifacts are written beneath `results/v0.3/runs/` without overwriting existing files. See `docs/V0.3_EXPERIMENT_READINESS.md`, `docs/case-review/`, and `docs/V0.3_RESULTS.md`.
+
 [![CI](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml/badge.svg)](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 

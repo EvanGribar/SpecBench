@@ -2,10 +2,15 @@ import { readFileSync } from "node:fs";
 import { generateText, Output } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
-import { NormalizedFindingSchema, type ReviewInput, type ReviewOutput, type ReviewerAdapter } from "../../core/src/index.js";
+import { NormalizedFindingSchema, type NormalizedFinding, type ReviewInput, type ReviewOutput, type ReviewerAdapter } from "../../core/src/index.js";
 
 export function normalizeFindings(input: unknown[]): ReturnType<typeof NormalizedFindingSchema.parse>[] {
   return input.map((finding) => NormalizedFindingSchema.parse(finding));
+}
+function estimatedCost(usage: { inputTokens?: number; outputTokens?: number }): number | undefined {
+  const inputRate = Number(process.env.SPECBENCH_INPUT_USD_PER_MILLION); const outputRate = Number(process.env.SPECBENCH_OUTPUT_USD_PER_MILLION);
+  if (!Number.isFinite(inputRate) || !Number.isFinite(outputRate) || inputRate < 0 || outputRate < 0) return undefined;
+  return ((usage.inputTokens ?? 0) * inputRate + (usage.outputTokens ?? 0) * outputRate) / 1_000_000;
 }
 
 export class JsonFileAdapter implements ReviewerAdapter {
@@ -45,6 +50,27 @@ export class SingleAgentAdapter implements ReviewerAdapter {
       output: Output.object({ schema: z.object({ findings: z.array(NormalizedFindingSchema) }) }),
       prompt: `You are reviewing a proposed change for product-requirement violations. Report only concrete violations.\n\nRequirement:\n${input.case.requirement}\n\nPatch:\n${input.patch}`
     });
-    return { findings: output.findings, raw: output, runtimeMs: Math.round(performance.now() - started), metadata: { model: this.model, inputTokens: usage.inputTokens, outputTokens: usage.outputTokens } };
+    return { findings: output.findings, raw: output, runtimeMs: Math.round(performance.now() - started), estimatedCostUsd: estimatedCost(usage), metadata: { model: this.model, inputTokens: usage.inputTokens, outputTokens: usage.outputTokens, pricingConfigured: estimatedCost(usage) !== undefined } };
+  }
+}
+
+/** Uses the same model and output contract as the baseline; only the review architecture changes. */
+export class ControlledSwarmAdapter implements ReviewerAdapter {
+  name = "swarm-review";
+  constructor(private readonly debateRounds: number, public version = "controlled-swarm-v0.3", private readonly model = process.env.SPECBENCH_MODEL ?? "gpt-5-mini") {}
+  async review(input: ReviewInput): Promise<ReviewOutput> {
+    if (input.dryRun) return { findings: [], metadata: { dryRun: true, model: this.model, debateRounds: this.debateRounds } };
+    if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is required for live experiments; use experiment --dry-run or --fixture for offline execution.");
+    const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY }); const started = performance.now();
+    const schema = z.object({ findings: z.array(NormalizedFindingSchema) }); const context = `Requirement:\n${input.case.requirement}\n\nPatch:\n${input.patch}`;
+    const mandates = ["authorization and state transitions", "user-visible product behavior", "data integrity and audit requirements"];
+    const reviewers = [] as Array<{ findings: NormalizedFinding[]; usage: { inputTokens?: number; outputTokens?: number } }>;
+    for (const mandate of mandates) { const response = await generateText({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, output: Output.object({ schema }), prompt: `You are one independent code reviewer specializing in ${mandate}. Identify only explicit product-requirement violations using the common finding schema.\n\n${context}` }); reviewers.push({ findings: response.output.findings, usage: response.usage }); }
+    let candidates = reviewers.flatMap((reviewer) => reviewer.findings);
+    for (let round = 0; round < this.debateRounds; round++) { const response = await generateText({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, output: Output.object({ schema }), prompt: `You are a debate round for a code review. Reconsider these candidate findings against the explicit requirement and patch; retain only defensible findings in the common schema.\n\n${context}\n\nCandidates:\n${JSON.stringify(candidates)}` }); candidates = response.output.findings; reviewers.push({ findings: candidates, usage: response.usage }); }
+    const principal = await generateText({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, output: Output.object({ schema }), prompt: `You are the principal reviewer. Consolidate these independent candidate findings against the requirement and patch. Emit only concrete violations in the common schema; do not invent issues.\n\n${context}\n\nCandidates:\n${JSON.stringify(candidates)}` });
+    const usage = [...reviewers.map((item) => item.usage), principal.usage];
+    const totalUsage = { inputTokens: usage.reduce((sum, item) => sum + (item.inputTokens ?? 0), 0), outputTokens: usage.reduce((sum, item) => sum + (item.outputTokens ?? 0), 0) };
+    return { findings: principal.output.findings, raw: { reviewers: reviewers.map((item) => item.findings), principal: principal.output.findings }, runtimeMs: Math.round(performance.now() - started), estimatedCostUsd: estimatedCost(totalUsage), metadata: { model: this.model, ...totalUsage, pricingConfigured: estimatedCost(totalUsage) !== undefined, debateRounds: this.debateRounds, providerCalls: usage.length } };
   }
 }
