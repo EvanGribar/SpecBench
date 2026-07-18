@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[66390,["/_next/static/chunks/1ux8h5j-32lar.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","main",null,{"children":[["$","p",null,{"className":"eyebrow","children":"Reference SaaS"}],["$","h1",null,{"children":"Acme Team"}],["$","p",null,{"children":["Starter"," plan · ",2,"/",3," seats"]}],["$","section",null,{"children":[["$","h2",null,{"children":"Members"}],["$","ul",null,{"children":[["$","li","u-admin",{"children":["Ada Admin"," ",["$","small",null,{"children":"admin"}]]}],["$","li","u-member",{"children":["Mina Member"," ",["$","small",null,{"children":"member"}]]}]]}]]}],["$","section",null,{"children":[["$","h2",null,{"children":"Notifications"}],["$","ul",null,{"children":[["$","li","n-welcome",{"children":["Welcome to Acme Team"," ",["$","small",null,{"children":"sent"}]]}]]}]]}]]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"0rmNDdb_bb2X3GR64CS7Y"}
+4:null

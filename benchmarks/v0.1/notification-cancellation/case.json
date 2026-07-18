@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "id": "notification-cancellation",
+  "title": "Cancelled notifications are retried",
+  "description": "A retry worker treats every non-sent notification as retryable, including cancelled notifications.",
+  "requirement": "REQ-NOTIFY-3: A cancelled notification must never be delivered or retried. Only pending notifications may be retried.",
+  "repository": { "baseCommit": "reference-saas-v0.1", "patchPath": "notification-cancellation/patch.diff" },
+  "expectedFindings": [{ "id": "cancelled-notification-retry", "title": "Cancelled notifications are eligible for retry", "description": "The retry guard excludes only sent notifications, allowing a cancelled message to be delivered later.", "severity": "high", "file": "apps/reference-saas/lib/notifications.ts", "startLine": 9, "endLine": 12, "requirementReference": "REQ-NOTIFY-3", "acceptableMatches": ["cancelled notification retried", "retry only pending", "cancellation state ignored"] }],
+  "distractors": [{ "description": "Retries increment an attempts counter.", "reasonNotAnIssue": "Tracking a retry count is expected for a pending notification." }]
+}

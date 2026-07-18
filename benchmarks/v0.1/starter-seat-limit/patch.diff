@@ -1,0 +1,19 @@
+diff --git a/apps/reference-saas/lib/invitations.ts b/apps/reference-saas/lib/invitations.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/reference-saas/lib/invitations.ts
+@@ -0,0 +1,25 @@
++import { getTeam, createInvitation, sendEmail } from "./repository";
++
++export async function inviteToTeam(teamId: string, email: string) {
++  const team = await getTeam(teamId);
++  if (!team) throw new Error("Team not found");
++
++  if (!email.includes("@")) {
++    throw new Error("A valid email address is required");
++  }
++
++  const invitation = await createInvitation({ teamId, email });
++  await sendEmail(invitation);
++  return invitation;
++}

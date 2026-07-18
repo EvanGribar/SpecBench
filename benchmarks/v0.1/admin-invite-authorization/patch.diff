@@ -1,0 +1,19 @@
+diff --git a/apps/reference-saas/app/api/teams/[teamId]/invites/route.ts b/apps/reference-saas/app/api/teams/[teamId]/invites/route.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/reference-saas/app/api/teams/[teamId]/invites/route.ts
+@@ -0,0 +1,19 @@
++import { findMembership, createInvite } from "@/lib/teams";
++
++export async function POST(request: Request, { params }: { params: Promise<{ teamId: string }> }) {
++  const { teamId } = await params;
++  const user = await currentUser(request);
++  const membership = await findMembership(teamId, user.id);
++
++  if (!membership) {
++    return Response.json({ error: "Not authorized" }, { status: 403 });
++  }
++
++  const invite = await createInvite(teamId, await request.json());
++  return Response.json(invite, { status: 201 });
++}

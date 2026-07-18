@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "id": "admin-invite-authorization",
+  "title": "Member can create team invitations",
+  "description": "A proposed invitation route checks team membership but omits the administrator role check.",
+  "requirement": "REQ-AUTH-1: Team administrators may invite members. Regular members may view the team but must not create invitations.",
+  "repository": { "baseCommit": "reference-saas-v0.1", "patchPath": "admin-invite-authorization/patch.diff" },
+  "expectedFindings": [{ "id": "member-invitation-permission", "title": "Invitation creation does not require an administrator", "description": "A regular team member can create an invitation because membership is checked without validating the admin role.", "severity": "high", "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts", "startLine": 12, "endLine": 15, "requirementReference": "REQ-AUTH-1", "acceptableMatches": ["regular member may invite", "missing admin role check", "administrator authorization"] }],
+  "distractors": [{ "description": "The route returns a generic unauthorized message.", "reasonNotAnIssue": "The message is intentionally non-enumerating and does not violate the requirement." }]
+}

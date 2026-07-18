@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+results/*.json
+results/*.html
+!results/.gitkeep

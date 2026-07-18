@@ -1,0 +1,1 @@
+{ "extends": "../../tsconfig.json", "compilerOptions": { "plugins": [{ "name": "next" }], "allowJs": false }, "include": ["next-env.d.ts", "app/**/*.ts", "app/**/*.tsx", "lib/**/*.ts", ".next/types/**/*.ts"] }
