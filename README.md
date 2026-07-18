@@ -2,6 +2,8 @@
 
 SpecBench is a local-first benchmark for explicit product-requirement violations in AI code review. v0.3 is an evidence-focused experimental release: it compares a single reviewer, a controlled swarm without debate, and the same swarm with one debate round.
 
+Current release: **v0.3.1-beta — Live smoke-test validation.** The live model-backed pipeline has been validated end to end under a durable $1.00 smoke-test cost ceiling. This is execution validation only: one shared case and one repetition do not establish reviewer or architecture superiority. The complete multi-case, repeated baseline study has not been run.
+
 ## v0.3 experiment
 
 ```bash
