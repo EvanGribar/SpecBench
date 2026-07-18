@@ -5,18 +5,18 @@ import { z } from "zod";
 import { NormalizedFindingSchema, type NormalizedFinding, type ReviewInput, type ReviewOutput, type ReviewerAdapter } from "../../core/src/index.js";
 
 type Usage = { inputTokens?: number; outputTokens?: number };
-let liveBudget: { ceiling: number; inputRate: number; outputRate: number; spent: number; reserved: number } | undefined;
-export function configureLiveBudget(ceiling: number, inputRate: number, outputRate: number): void { liveBudget = { ceiling, inputRate, outputRate, spent: 0, reserved: 0 }; }
-export function liveBudgetStatus(): { spent: number; remaining: number } | undefined { return liveBudget && { spent: liveBudget.spent, remaining: liveBudget.ceiling - liveBudget.spent - liveBudget.reserved }; }
+let liveBudget: { ceiling: number; inputRate: number; outputRate: number; measured: number; committed: number } | undefined;
+export function configureLiveBudget(ceiling: number, inputRate: number, outputRate: number, priorMeasured = 0.000510): void { liveBudget = { ceiling, inputRate, outputRate, measured: priorMeasured, committed: 0 }; }
+export function liveBudgetStatus(): { measured: number; committed: number; spent: number; remaining: number } | undefined { return liveBudget && { measured: liveBudget.measured, committed: liveBudget.committed, spent: liveBudget.measured, remaining: liveBudget.ceiling - liveBudget.measured - liveBudget.committed }; }
 function reserve(prompt: string, maxOutputTokens: number | undefined): number {
   if (!liveBudget) return 0; const inputTokens = Math.ceil(prompt.length / 2); const cost = (inputTokens * liveBudget.inputRate + (maxOutputTokens ?? 0) * liveBudget.outputRate) / 1_000_000;
-  if (liveBudget.spent + liveBudget.reserved + cost > liveBudget.ceiling) throw new Error("hard live-smoke budget would be exceeded before this call"); liveBudget.reserved += cost; return cost;
+  if (liveBudget.measured + liveBudget.committed + cost > liveBudget.ceiling) throw new Error("hard live-smoke budget would be exceeded before this call"); liveBudget.committed += cost; return cost;
 }
 function settle(reservation: number, usage: Usage): number | undefined {
-  if (!liveBudget) return undefined; const actual = ((usage.inputTokens ?? 0) * liveBudget.inputRate + (usage.outputTokens ?? 0) * liveBudget.outputRate) / 1_000_000; liveBudget.reserved -= reservation; liveBudget.spent += actual;
-  console.log(`Call cost $${actual.toFixed(6)} | cumulative $${liveBudget.spent.toFixed(6)} | remaining $${(liveBudget.ceiling - liveBudget.spent - liveBudget.reserved).toFixed(6)}`); return actual;
+  if (!liveBudget || usage.inputTokens === undefined || usage.outputTokens === undefined) return undefined; const actual = ((usage.inputTokens ?? 0) * liveBudget.inputRate + (usage.outputTokens ?? 0) * liveBudget.outputRate) / 1_000_000; liveBudget.committed -= reservation; liveBudget.measured += actual;
+  console.log(`Measured $${liveBudget.measured.toFixed(6)} | conservatively committed $${liveBudget.committed.toFixed(6)} | remaining $${(liveBudget.ceiling - liveBudget.measured - liveBudget.committed).toFixed(6)}`); return actual;
 }
-async function budgetedGenerate(options: Parameters<typeof generateText>[0] & { prompt: string; maxOutputTokens?: number }) { const reservation = reserve(options.prompt, options.maxOutputTokens); try { const response = await generateText(options); settle(reservation, response.usage); return response; } catch (error) { if (liveBudget) liveBudget.reserved -= reservation; throw error; } }
+async function budgetedGenerate(options: Parameters<typeof generateText>[0] & { prompt: string; maxOutputTokens?: number }) { const reservation = reserve(options.prompt, options.maxOutputTokens); try { const response = await generateText(options); if (settle(reservation, response.usage) === undefined && liveBudget) console.log(`Measured $${liveBudget.measured.toFixed(6)} | conservatively committed $${liveBudget.committed.toFixed(6)} | remaining $${(liveBudget.ceiling - liveBudget.measured - liveBudget.committed).toFixed(6)}`); return response; } catch (error) { (error as any).specbenchReservationUsd = reservation; throw error; } }
 
 export function normalizeFindings(input: unknown[]): ReturnType<typeof NormalizedFindingSchema.parse>[] {
   return input.map((finding) => NormalizedFindingSchema.parse(finding));
@@ -26,7 +26,7 @@ function estimatedCost(usage: { inputTokens?: number; outputTokens?: number }): 
   if (!Number.isFinite(inputRate) || !Number.isFinite(outputRate) || inputRate < 0 || outputRate < 0) return undefined;
   return ((usage.inputTokens ?? 0) * inputRate + (usage.outputTokens ?? 0) * outputRate) / 1_000_000;
 }
-const StructuredFindingSchema = z.object({ id: z.string().nullable(), title: z.string(), description: z.string(), severity: z.string().nullable(), file: z.string().nullable(), startLine: z.number().int().positive().nullable(), endLine: z.number().int().positive().nullable(), confidence: z.number().min(0).max(1).nullable(), requirementReference: z.string().nullable() }).transform((finding) => NormalizedFindingSchema.parse(Object.fromEntries(Object.entries(finding).filter(([, value]) => value !== null))));
+const StructuredFindingSchema = z.object({ title: z.string(), description: z.string(), severity: z.string().nullable(), file: z.string().nullable(), startLine: z.number().int().positive().nullable(), endLine: z.number().int().positive().nullable(), requirementReference: z.string().nullable() }).transform((finding) => NormalizedFindingSchema.parse(Object.fromEntries(Object.entries(finding).filter(([, value]) => value !== null))));
 const StructuredOutputSchema = z.object({ findings: z.array(StructuredFindingSchema) });
 
 export class JsonFileAdapter implements ReviewerAdapter {
@@ -62,7 +62,7 @@ export class SingleAgentAdapter implements ReviewerAdapter {
     const started = performance.now();
     const { output, usage } = await budgetedGenerate({
       model: openai(this.model),
-      maxOutputTokens: input.maxOutputTokens,
+      maxOutputTokens: input.maxOutputTokens, providerOptions: { openai: { reasoningEffort: "minimal" } },
       output: Output.object({ schema: StructuredOutputSchema }),
       prompt: `You are reviewing a proposed change for product-requirement violations. Report only concrete violations.\n\nRequirement:\n${input.case.requirement}\n\nPatch:\n${input.patch}`
     });
@@ -81,10 +81,10 @@ export class ControlledSwarmAdapter implements ReviewerAdapter {
     const schema = StructuredOutputSchema; const context = `Requirement:\n${input.case.requirement}\n\nPatch:\n${input.patch}`;
     const mandates = ["authorization and state transitions", "user-visible product behavior", "data integrity and audit requirements"];
     const reviewers = [] as Array<{ findings: NormalizedFinding[]; usage: { inputTokens?: number; outputTokens?: number } }>;
-    for (const mandate of mandates) { const response = await budgetedGenerate({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, output: Output.object({ schema }), prompt: `You are one independent code reviewer specializing in ${mandate}. Identify only explicit product-requirement violations using the common finding schema.\n\n${context}` }); reviewers.push({ findings: response.output.findings, usage: response.usage }); }
+    for (const mandate of mandates) { const response = await budgetedGenerate({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, providerOptions: { openai: { reasoningEffort: "minimal" } }, output: Output.object({ schema }), prompt: `You are one independent code reviewer specializing in ${mandate}. Identify only explicit product-requirement violations using the common finding schema.\n\n${context}` }); reviewers.push({ findings: response.output.findings, usage: response.usage }); }
     let candidates = reviewers.flatMap((reviewer) => reviewer.findings);
-    for (let round = 0; round < this.debateRounds; round++) { const response = await budgetedGenerate({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, output: Output.object({ schema }), prompt: `You are a debate round for a code review. Reconsider these candidate findings against the explicit requirement and patch; retain only defensible findings in the common schema.\n\n${context}\n\nCandidates:\n${JSON.stringify(candidates)}` }); candidates = response.output.findings; reviewers.push({ findings: candidates, usage: response.usage }); }
-    const principal = await budgetedGenerate({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, output: Output.object({ schema }), prompt: `You are the principal reviewer. Consolidate these independent candidate findings against the requirement and patch. Emit only concrete violations in the common schema; do not invent issues.\n\n${context}\n\nCandidates:\n${JSON.stringify(candidates)}` });
+    for (let round = 0; round < this.debateRounds; round++) { const response = await budgetedGenerate({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, providerOptions: { openai: { reasoningEffort: "minimal" } }, output: Output.object({ schema }), prompt: `You are a debate round for a code review. Reconsider these candidate findings against the explicit requirement and patch; retain only defensible findings in the common schema.\n\n${context}\n\nCandidates:\n${JSON.stringify(candidates)}` }); candidates = response.output.findings; reviewers.push({ findings: candidates, usage: response.usage }); }
+    const principal = await budgetedGenerate({ model: openai(this.model), maxOutputTokens: input.maxOutputTokens, providerOptions: { openai: { reasoningEffort: "minimal" } }, output: Output.object({ schema }), prompt: `You are the principal reviewer. Consolidate these independent candidate findings against the requirement and patch. Emit only concrete violations in the common schema; do not invent issues.\n\n${context}\n\nCandidates:\n${JSON.stringify(candidates)}` });
     const usage = [...reviewers.map((item) => item.usage), principal.usage];
     const totalUsage = { inputTokens: usage.reduce((sum, item) => sum + (item.inputTokens ?? 0), 0), outputTokens: usage.reduce((sum, item) => sum + (item.outputTokens ?? 0), 0) };
     return { findings: principal.output.findings, raw: { reviewers: reviewers.map((item) => item.findings), principal: principal.output.findings }, runtimeMs: Math.round(performance.now() - started), estimatedCostUsd: estimatedCost(totalUsage), metadata: { model: this.model, ...totalUsage, pricingConfigured: estimatedCost(totalUsage) !== undefined, debateRounds: this.debateRounds, providerCalls: usage.length } };

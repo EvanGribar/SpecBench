@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1",
+  "runId": "v03-smoke-single-agent-83c6d2d2-5a36-4e38-be8b-2cd0e4e39996",
+  "createdAt": "2026-07-18T22:36:30.646Z",
+  "configurationId": "v03-smoke-single-agent",
+  "repetition": 1,
+  "startedAt": "2026-07-18T22:36:30.646Z",
+  "completedAt": "2026-07-18T22:36:32.545Z",
+  "benchmarkVersion": "v0.2",
+  "reviewer": {
+    "name": "single-agent",
+    "version": "ai-sdk-v6"
+  },
+  "configuration": {
+    "schemaVersion": "1",
+    "id": "v03-smoke-single-agent",
+    "version": "0.3.0-beta",
+    "reviewerType": "single-agent",
+    "reviewerVersion": "ai-sdk-v6",
+    "provider": "openai",
+    "model": "gpt-5-nano",
+    "temperature": 0,
+    "maxOutputTokens": 600,
+    "maxCalls": 1,
+    "maxEstimatedCostUsd": 1,
+    "agentCount": 1,
+    "agentMandates": [
+      "Identify explicit requirement violations using the common schema."
+    ],
+    "debateRounds": 0,
+    "confidenceThreshold": 0.5,
+    "principal": {
+      "role": "reviewer"
+    },
+    "promptVersion": "requirement-review-smoke-v0.3",
+    "benchmarkVersion": "v0.2",
+    "caseIds": [
+      "admin-invite-authorization"
+    ],
+    "repetitions": 1,
+    "environmentMetadataFields": [
+      "node",
+      "platform",
+      "model",
+      "gitCommit"
+    ],
+    "notes": "Live smoke test only; not part of the primary comparison."
+  },
+  "cases": [
+    {
+      "caseId": "admin-invite-authorization",
+      "raw": {
+        "findings": [
+          {
+            "title": "Authorization check missing for admin-only operation",
+            "description": "The patch attempts to create an invite but only checks for membership existence. It does not verify that the user is a team administrator. This allows non-admin members to create invitations, violating REQ-AUTH-1 which requires only team administrators may create invitations.",
+            "severity": "High",
+            "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+            "startLine": 1,
+            "endLine": 16,
+            "requirementReference": "REQ-AUTH-1"
+          }
+        ]
+      },
+      "output": {
+        "findings": [
+          {
+            "title": "Authorization check missing for admin-only operation",
+            "description": "The patch attempts to create an invite but only checks for membership existence. It does not verify that the user is a team administrator. This allows non-admin members to create invitations, violating REQ-AUTH-1 which requires only team administrators may create invitations.",
+            "severity": "High",
+            "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+            "startLine": 1,
+            "endLine": 16,
+            "requirementReference": "REQ-AUTH-1"
+          }
+        ],
+        "raw": {
+          "findings": [
+            {
+              "title": "Authorization check missing for admin-only operation",
+              "description": "The patch attempts to create an invite but only checks for membership existence. It does not verify that the user is a team administrator. This allows non-admin members to create invitations, violating REQ-AUTH-1 which requires only team administrators may create invitations.",
+              "severity": "High",
+              "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+              "startLine": 1,
+              "endLine": 16,
+              "requirementReference": "REQ-AUTH-1"
+            }
+          ]
+        },
+        "runtimeMs": 1897,
+        "metadata": {
+          "model": "gpt-5-nano",
+          "inputTokens": 294,
+          "outputTokens": 163,
+          "pricingConfigured": false,
+          "attemptId": "v03-smoke-single-agent-83c6d2d2-5a36-4e38-be8b-2cd0e4e39996",
+          "usageStatus": "measured",
+          "costStatus": "unavailable",
+          "cumulativeMeasuredCostUsd": 0.0005899000000000001,
+          "cumulativeCommittedCostUsd": 0,
+          "gitCommit": "local"
+        }
+      }
+    }
+  ]
+}
