@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "id": "starter-seat-limit",
+  "title": "Starter plan seat limit is bypassed",
+  "description": "A team invite flow creates a member without enforcing the selected plan's seat limit.",
+  "requirement": "REQ-PLAN-2: Starter teams may have at most three active members. An invitation above the limit must be rejected before it is sent.",
+  "repository": { "baseCommit": "reference-saas-v0.1", "patchPath": "starter-seat-limit/patch.diff" },
+  "expectedFindings": [{ "id": "missing-seat-limit", "title": "Invitation ignores Starter seat limit", "description": "The new invitation flow sends an invitation without checking the team's active seat count against its plan limit.", "severity": "medium", "file": "apps/reference-saas/lib/invitations.ts", "startLine": 18, "endLine": 20, "requirementReference": "REQ-PLAN-2", "acceptableMatches": ["seat limit", "plan limit", "too many members"] }],
+  "distractors": [{ "description": "The seat count is displayed in the dashboard after the invitation flow.", "reasonNotAnIssue": "Displaying the count is useful but does not enforce the requirement." }]
+}

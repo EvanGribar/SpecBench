@@ -1,0 +1,14 @@
+diff --git a/apps/reference-saas/lib/payments.ts b/apps/reference-saas/lib/payments.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/reference-saas/lib/payments.ts
+@@ -0,0 +1,16 @@
++export async function retryPayment(invoiceId: string) {
++  const invoice = await getInvoice(invoiceId);
++  if (!invoice) throw new Error("Invoice not found");
++  return charge({
++    invoiceId,
++    amount: invoice.amount,
++    idempotencyKey: crypto.randomUUID()
++  });
++}
