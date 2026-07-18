@@ -15,7 +15,9 @@ Status reflects the repository audit and this launch PR. â€œRemaining follow-upâ
 | Roadmap | Fixed in this PR | Current/Next/Later scope replaces stale v0.1 planning in `ROADMAP.md`. |
 | Citation guidance | Fixed in this PR | Valid `CITATION.cff` added; no DOI invented. |
 | Release visibility | Fixed in this PR | README links v0.3.1-beta, changelog, smoke-test docs, and limitations. |
-| Repository description/topics | Fixed in this PR | Exact recommendations are in the PR description; settings are not changed automatically. |
+| Repository description/topics | Fixed in this PR | Repository description and launch topics were applied through GitHub settings; exact values are recorded in the PR description. |
+| GitHub Discussions | Complete | Enabled for the repository; the issue-template contact link is active. |
+| Private vulnerability reporting | Complete | Enabled for the repository; the issue-template and security links are active. |
 | CI avoids live calls | Complete | `.github/workflows/ci.yml` runs install, typecheck, validate, and tests only. |
 | Apache-2.0 license | Complete | Existing `LICENSE` is the full Apache-2.0 text. |
 | Current-tree secret hygiene | Complete | `.env*` ignored, `.env.example` contains placeholders only, and no credential material was added. |
