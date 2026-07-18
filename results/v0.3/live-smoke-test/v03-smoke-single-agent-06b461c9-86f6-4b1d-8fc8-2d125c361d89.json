@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1",
+  "runId": "v03-smoke-single-agent-06b461c9-86f6-4b1d-8fc8-2d125c361d89",
+  "configurationId": "v03-smoke-single-agent",
+  "repetition": 1,
+  "startedAt": "2026-07-18T22:26:55.701Z",
+  "completedAt": "2026-07-18T22:26:56.870Z",
+  "benchmarkVersion": "v0.2",
+  "reviewer": {
+    "name": "single-agent",
+    "version": "ai-sdk-v6"
+  },
+  "configuration": {
+    "schemaVersion": "1",
+    "id": "v03-smoke-single-agent",
+    "version": "0.3.0-beta",
+    "reviewerType": "single-agent",
+    "reviewerVersion": "ai-sdk-v6",
+    "provider": "openai",
+    "model": "gpt-5-nano",
+    "temperature": 0,
+    "maxOutputTokens": 400,
+    "maxCalls": 1,
+    "maxEstimatedCostUsd": 1,
+    "agentCount": 1,
+    "agentMandates": [
+      "Identify explicit requirement violations using the common schema."
+    ],
+    "debateRounds": 0,
+    "confidenceThreshold": 0.5,
+    "principal": {
+      "role": "reviewer"
+    },
+    "promptVersion": "requirement-review-smoke-v0.3",
+    "benchmarkVersion": "v0.2",
+    "caseIds": [
+      "admin-invite-authorization"
+    ],
+    "repetitions": 1,
+    "environmentMetadataFields": [
+      "node",
+      "platform",
+      "model",
+      "gitCommit"
+    ],
+    "notes": "Live smoke test only; not part of the primary comparison."
+  },
+  "cases": [
+    {
+      "caseId": "admin-invite-authorization",
+      "raw": null,
+      "output": {
+        "findings": [],
+        "metadata": {
+          "failure": "Invalid schema for response_format 'response': In context=('properties', 'findings', 'items'), 'required' is required to be supplied and to be an array including every key in properties. Missing 'id'.",
+          "runId": "v03-smoke-single-agent-06b461c9-86f6-4b1d-8fc8-2d125c361d89",
+          "model": "gpt-5-nano",
+          "cumulativeEstimatedCostUsd": 0,
+          "gitCommit": "local"
+        }
+      }
+    }
+  ]
+}

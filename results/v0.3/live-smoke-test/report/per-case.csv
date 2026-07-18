@@ -1,0 +1,10 @@
+configurationId,repetition,caseId,truePositives,falsePositives,falseNegatives,runtimeMs,estimatedCostUsd
+v03-smoke-single-agent,1,admin-invite-authorization,0,0,1,0,0
+v03-smoke-single-agent,1,admin-invite-authorization,0,0,1,0,0
+v03-smoke-single-agent,1,admin-invite-authorization,1,0,0,1897,0
+v03-smoke-swarm-no-debate,1,admin-invite-authorization,0,0,1,0,0
+v03-smoke-swarm-no-debate,1,admin-invite-authorization,1,0,0,5716,0
+v03-smoke-swarm-no-debate,1,admin-invite-authorization,0,0,1,0,0
+v03-smoke-swarm-with-debate,1,admin-invite-authorization,0,0,1,0,0
+v03-smoke-swarm-with-debate,1,admin-invite-authorization,0,0,1,0,0
+v03-smoke-swarm-with-debate,1,admin-invite-authorization,1,0,0,7702,0

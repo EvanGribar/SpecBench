@@ -1,0 +1,203 @@
+{
+  "schemaVersion": "1",
+  "runId": "v03-smoke-swarm-with-debate-be8b2af6-b673-4160-841f-f61111058f7a",
+  "createdAt": "2026-07-18T22:37:15.657Z",
+  "configurationId": "v03-smoke-swarm-with-debate",
+  "repetition": 1,
+  "startedAt": "2026-07-18T22:37:15.657Z",
+  "completedAt": "2026-07-18T22:37:23.361Z",
+  "benchmarkVersion": "v0.2",
+  "reviewer": {
+    "name": "swarm-review",
+    "version": "controlled-swarm-v0.3"
+  },
+  "configuration": {
+    "schemaVersion": "1",
+    "id": "v03-smoke-swarm-with-debate",
+    "version": "0.3.0-beta",
+    "reviewerType": "swarm-review",
+    "reviewerVersion": "controlled-swarm-v0.3",
+    "provider": "openai",
+    "model": "gpt-5-nano",
+    "temperature": 0,
+    "maxOutputTokens": 600,
+    "maxCalls": 5,
+    "maxEstimatedCostUsd": 1,
+    "agentCount": 3,
+    "agentMandates": [
+      "Authorization and state review.",
+      "User-visible behavior review.",
+      "Principal consolidation."
+    ],
+    "debateRounds": 1,
+    "confidenceThreshold": 0.5,
+    "principal": {
+      "role": "consolidator",
+      "canReject": true
+    },
+    "promptVersion": "requirement-review-smoke-v0.3",
+    "benchmarkVersion": "v0.2",
+    "caseIds": [
+      "admin-invite-authorization"
+    ],
+    "repetitions": 1,
+    "environmentMetadataFields": [
+      "node",
+      "platform",
+      "model",
+      "gitCommit"
+    ],
+    "notes": "Live smoke test only; not part of the primary comparison."
+  },
+  "cases": [
+    {
+      "caseId": "admin-invite-authorization",
+      "raw": {
+        "reviewers": [
+          [
+            {
+              "title": "Authorization rule violation: invites creation not restricted to administrators",
+              "description": "The new route for creating invites allows any user with a membership in the team to create an invite. It checks for membership but does not verify that the member is a team administrator as required by REQ-AUTH-1.",
+              "severity": "high",
+              "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+              "startLine": 1,
+              "endLine": 16,
+              "requirementReference": "REQ-AUTH-1"
+            }
+          ],
+          [
+            {
+              "title": "Unauthorized team invites flow exists but relies on missing route guard context",
+              "description": "The new route for creating invites checks membership by fetching membership and returning 403 if not found, but this is implemented in a way that depends on an undefined context: user and teamId are used without shown extraction from the request, and the code snippet shows a direct await on findMembership and request.json() without clearly defined authentication/authorization middleware. If the route does not ensure that only team administrators can create invites, this could allow non-admin members to trigger invites. The explicit product requirement REQ-AUTH-1 states only team administrators may create invitations; the patch does not demonstrate enforcement for administrator role distinct from general membership.",
+              "severity": "high",
+              "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+              "startLine": 1,
+              "endLine": 16,
+              "requirementReference": "REQ-AUTH-1"
+            }
+          ],
+          [
+            {
+              "title": "Authorization check for creating invitations missing explicit enforcement of REQ-AUTH-1",
+              "description": "The patch adds a route for creating invites but only shows a single authorization check by finding membership and returning 403 if not found. It does not explicitly enforce that only team administrators can create invitations; membership alone may not guarantee admin rights. There is no explicit role/permission verification against an administrator role before allowing createInvite.",
+              "severity": "high",
+              "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+              "startLine": 1,
+              "endLine": 16,
+              "requirementReference": "REQ-AUTH-1"
+            }
+          ],
+          [
+            {
+              "title": "Authorization rule violation: invites creation not restricted to administrators",
+              "description": "The new route for creating invites allows any user with a membership in the team to create an invite. It checks for membership but does not verify that the member is a team administrator as required by REQ-AUTH-1.",
+              "severity": "high",
+              "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+              "startLine": 1,
+              "endLine": 16,
+              "requirementReference": "REQ-AUTH-1"
+            }
+          ]
+        ],
+        "principal": [
+          {
+            "title": "Authorization rule violation: invites creation not restricted to administrators",
+            "description": "The new route for creating invites allows any user with a membership in the team to create an invite. It checks for membership but does not verify that the member is a team administrator as required by REQ-AUTH-1.",
+            "severity": "high",
+            "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+            "startLine": 1,
+            "endLine": 16,
+            "requirementReference": "REQ-AUTH-1"
+          }
+        ]
+      },
+      "output": {
+        "findings": [
+          {
+            "title": "Authorization rule violation: invites creation not restricted to administrators",
+            "description": "The new route for creating invites allows any user with a membership in the team to create an invite. It checks for membership but does not verify that the member is a team administrator as required by REQ-AUTH-1.",
+            "severity": "high",
+            "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+            "startLine": 1,
+            "endLine": 16,
+            "requirementReference": "REQ-AUTH-1"
+          }
+        ],
+        "raw": {
+          "reviewers": [
+            [
+              {
+                "title": "Authorization rule violation: invites creation not restricted to administrators",
+                "description": "The new route for creating invites allows any user with a membership in the team to create an invite. It checks for membership but does not verify that the member is a team administrator as required by REQ-AUTH-1.",
+                "severity": "high",
+                "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+                "startLine": 1,
+                "endLine": 16,
+                "requirementReference": "REQ-AUTH-1"
+              }
+            ],
+            [
+              {
+                "title": "Unauthorized team invites flow exists but relies on missing route guard context",
+                "description": "The new route for creating invites checks membership by fetching membership and returning 403 if not found, but this is implemented in a way that depends on an undefined context: user and teamId are used without shown extraction from the request, and the code snippet shows a direct await on findMembership and request.json() without clearly defined authentication/authorization middleware. If the route does not ensure that only team administrators can create invites, this could allow non-admin members to trigger invites. The explicit product requirement REQ-AUTH-1 states only team administrators may create invitations; the patch does not demonstrate enforcement for administrator role distinct from general membership.",
+                "severity": "high",
+                "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+                "startLine": 1,
+                "endLine": 16,
+                "requirementReference": "REQ-AUTH-1"
+              }
+            ],
+            [
+              {
+                "title": "Authorization check for creating invitations missing explicit enforcement of REQ-AUTH-1",
+                "description": "The patch adds a route for creating invites but only shows a single authorization check by finding membership and returning 403 if not found. It does not explicitly enforce that only team administrators can create invitations; membership alone may not guarantee admin rights. There is no explicit role/permission verification against an administrator role before allowing createInvite.",
+                "severity": "high",
+                "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+                "startLine": 1,
+                "endLine": 16,
+                "requirementReference": "REQ-AUTH-1"
+              }
+            ],
+            [
+              {
+                "title": "Authorization rule violation: invites creation not restricted to administrators",
+                "description": "The new route for creating invites allows any user with a membership in the team to create an invite. It checks for membership but does not verify that the member is a team administrator as required by REQ-AUTH-1.",
+                "severity": "high",
+                "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+                "startLine": 1,
+                "endLine": 16,
+                "requirementReference": "REQ-AUTH-1"
+              }
+            ]
+          ],
+          "principal": [
+            {
+              "title": "Authorization rule violation: invites creation not restricted to administrators",
+              "description": "The new route for creating invites allows any user with a membership in the team to create an invite. It checks for membership but does not verify that the member is a team administrator as required by REQ-AUTH-1.",
+              "severity": "high",
+              "file": "apps/reference-saas/app/api/teams/[teamId]/invites/route.ts",
+              "startLine": 1,
+              "endLine": 16,
+              "requirementReference": "REQ-AUTH-1"
+            }
+          ]
+        },
+        "runtimeMs": 7702,
+        "metadata": {
+          "model": "gpt-5-nano",
+          "inputTokens": 2062,
+          "outputTokens": 761,
+          "pricingConfigured": false,
+          "debateRounds": 1,
+          "providerCalls": 5,
+          "attemptId": "v03-smoke-swarm-with-debate-be8b2af6-b673-4160-841f-f61111058f7a",
+          "usageStatus": "measured",
+          "costStatus": "unavailable",
+          "cumulativeMeasuredCostUsd": 0.0009175000000000001,
+          "cumulativeCommittedCostUsd": 0,
+          "gitCommit": "local"
+        }
+      }
+    }
+  ]
+}
