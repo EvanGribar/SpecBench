@@ -3,20 +3,36 @@ import { generateText, Output } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 import { NormalizedFindingSchema, type NormalizedFinding, type ReviewInput, type ReviewOutput, type ReviewerAdapter } from "../../core/src/index.js";
+import { LiveBudgetLedger, type BudgetStatus } from "./live-budget-ledger.js";
 
 type Usage = { inputTokens?: number; outputTokens?: number };
-let liveBudget: { ceiling: number; inputRate: number; outputRate: number; measured: number; committed: number } | undefined;
-export function configureLiveBudget(ceiling: number, inputRate: number, outputRate: number, priorMeasured = 0.000510): void { liveBudget = { ceiling, inputRate, outputRate, measured: priorMeasured, committed: 0 }; }
-export function liveBudgetStatus(): { measured: number; committed: number; spent: number; remaining: number } | undefined { return liveBudget && { measured: liveBudget.measured, committed: liveBudget.committed, spent: liveBudget.measured, remaining: liveBudget.ceiling - liveBudget.measured - liveBudget.committed }; }
-function reserve(prompt: string, maxOutputTokens: number | undefined): number {
-  if (!liveBudget) return 0; const inputTokens = Math.ceil(prompt.length / 2); const cost = (inputTokens * liveBudget.inputRate + (maxOutputTokens ?? 0) * liveBudget.outputRate) / 1_000_000;
-  if (liveBudget.measured + liveBudget.committed + cost > liveBudget.ceiling) throw new Error("hard live-smoke budget would be exceeded before this call"); liveBudget.committed += cost; return cost;
+let liveBudget: { ledger: LiveBudgetLedger; inputRate: number; outputRate: number; details: { runId?: string; configurationId?: string; caseId?: string } } | undefined;
+export function configureLiveBudget(ledgerFile: string, inputRate: number, outputRate: number, details: { runId?: string; configurationId?: string; caseId?: string } = {}): void { liveBudget = { ledger: new LiveBudgetLedger(ledgerFile), inputRate, outputRate, details }; }
+export function liveBudgetStatus(): BudgetStatus | undefined { return liveBudget?.ledger.audit(); }
+function reserve(prompt: string, maxOutputTokens: number | undefined) {
+  if (!liveBudget) return undefined; const inputTokens = Math.ceil(prompt.length / 2); const cost = (inputTokens * liveBudget.inputRate + (maxOutputTokens ?? 0) * liveBudget.outputRate) / 1_000_000;
+  return liveBudget.ledger.reserve(cost, liveBudget.details);
 }
-function settle(reservation: number, usage: Usage): number | undefined {
-  if (!liveBudget || usage.inputTokens === undefined || usage.outputTokens === undefined) return undefined; const actual = ((usage.inputTokens ?? 0) * liveBudget.inputRate + (usage.outputTokens ?? 0) * liveBudget.outputRate) / 1_000_000; liveBudget.committed -= reservation; liveBudget.measured += actual;
-  console.log(`Measured $${liveBudget.measured.toFixed(6)} | conservatively committed $${liveBudget.committed.toFixed(6)} | remaining $${(liveBudget.ceiling - liveBudget.measured - liveBudget.committed).toFixed(6)}`); return actual;
+async function budgetedGenerate(options: Parameters<typeof generateText>[0] & { prompt: string; maxOutputTokens?: number }) {
+  const reservation = reserve(options.prompt, options.maxOutputTokens);
+  try {
+    const response = await generateText(options);
+    if (reservation && liveBudget) {
+      if (response.usage.inputTokens === undefined || response.usage.outputTokens === undefined) {
+        const status = liveBudget.ledger.retainAmbiguous(reservation.id, "successful provider response without reliable usage; reservation retained");
+        Object.assign(response, { specbenchBudget: { status: "conservatively reserved", reservationId: reservation.id, reservedUsd: reservation.reservedUsd, ledger: status } });
+      } else {
+        const actual = ((response.usage.inputTokens * liveBudget.inputRate) + (response.usage.outputTokens * liveBudget.outputRate)) / 1_000_000;
+        const status = liveBudget.ledger.settle(reservation.id, actual);
+        Object.assign(response, { specbenchBudget: { status: "measured", reservationId: reservation.id, measuredUsd: actual, ledger: status } });
+      }
+    }
+    return response;
+  } catch (error) {
+    if (reservation && liveBudget) { const status = liveBudget.ledger.retainAmbiguous(reservation.id); Object.assign(error as object, { specbenchBudget: { status: "conservatively reserved", reservationId: reservation.id, reservedUsd: reservation.reservedUsd, ledger: status } }); }
+    throw error;
+  }
 }
-async function budgetedGenerate(options: Parameters<typeof generateText>[0] & { prompt: string; maxOutputTokens?: number }) { const reservation = reserve(options.prompt, options.maxOutputTokens); try { const response = await generateText(options); if (settle(reservation, response.usage) === undefined && liveBudget) console.log(`Measured $${liveBudget.measured.toFixed(6)} | conservatively committed $${liveBudget.committed.toFixed(6)} | remaining $${(liveBudget.ceiling - liveBudget.measured - liveBudget.committed).toFixed(6)}`); return response; } catch (error) { (error as any).specbenchReservationUsd = reservation; throw error; } }
 
 export function normalizeFindings(input: unknown[]): ReturnType<typeof NormalizedFindingSchema.parse>[] {
   return input.map((finding) => NormalizedFindingSchema.parse(finding));

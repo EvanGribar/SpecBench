@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1",
+  "experimentId": "specbench-v0.3-live-smoke-test",
+  "currency": "USD",
+  "ceilingUsd": 1,
+  "measuredUsd": 0.00132,
+  "conservativelyCommittedUsd": 0,
+  "updatedAt": "2026-07-18T22:46:01.213Z",
+  "entries": [
+    {
+      "id": "migration-recorded-smoke-spend",
+      "timestamp": "2026-07-18T00:00:00.000Z",
+      "status": "settled",
+      "measuredUsd": 0.00132,
+      "note": "One-time migration of the $0.001320 aggregate from reliable terminal settlement logs. Exact per-call allocation for earlier no-output attempts was not preserved; this aggregate is the authoritative documented measured total."
+    }
+  ]
+}
