@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BenchmarkCaseSchema, NormalizedFindingSchema, validateCase } from "../packages/core/src/index.js";
+import { BenchmarkCaseSchema, ExperimentConfigurationSchema, NormalizedFindingSchema, validateCase } from "../packages/core/src/index.js";
 import { aggregateScores, matchCase } from "../packages/scorer/src/index.js";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -28,6 +28,14 @@ describe("case schema and validation", () => {
     for (const fixture of ["perfect", "high-recall-fp", "high-precision-missed", "duplicate-findings", "incorrect-severity", "total-failure"]) {
       expect(() => JSON.parse(readFileSync(join(root, `fixtures/${fixture}.json`), "utf8"))).not.toThrow();
     }
+  });
+  it("validates all controlled v0.3 configurations without embedded secrets", () => {
+    const configs = readdirSync(join(root, "experiments/v0.3")).filter((file) => file.endsWith(".json")).map((file) => ExperimentConfigurationSchema.parse(JSON.parse(readFileSync(join(root, "experiments/v0.3", file), "utf8"))));
+    expect(configs).toHaveLength(3);
+    expect(new Set(configs.flatMap((config) => config.caseIds))).toEqual(new Set(definitions.map((item) => item.id)));
+    expect(configs.every((config) => !JSON.stringify(config).match(/sk-[a-z0-9]|api[_-]?key|client[_-]?secret/i))).toBe(true);
+    expect(configs.find((config) => config.id === "v03-swarm-no-debate")?.debateRounds).toBe(0);
+    expect(configs.find((config) => config.id === "v03-swarm-with-debate")?.debateRounds).toBe(1);
   });
 });
 

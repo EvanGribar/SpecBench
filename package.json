@@ -1,6 +1,6 @@
 {
   "name": "specbench",
-  "version": "0.2.0",
+  "version": "0.3.0-experimental",
   "type": "module",
   "private": true,
   "description": "A local-first benchmark for product-requirement adherence in AI code review.",
@@ -13,7 +13,14 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "build:reference": "pnpm --dir apps/reference-saas build",
-    "specbench": "tsx packages/cli/src/index.ts"
+    "specbench": "tsx packages/cli/src/index.ts",
+    "experiment:v0.3:dry-run": "tsx packages/cli/src/index.ts experiment --all --dry-run",
+    "experiment:v0.3:single-agent": "tsx packages/cli/src/index.ts experiment --config experiments/v0.3/single-agent.json",
+    "experiment:v0.3:swarm-no-debate": "tsx packages/cli/src/index.ts experiment --config experiments/v0.3/swarm-no-debate.json",
+    "experiment:v0.3:swarm-with-debate": "tsx packages/cli/src/index.ts experiment --config experiments/v0.3/swarm-with-debate.json",
+    "experiment:v0.3:score": "tsx packages/cli/src/index.ts experiment-score",
+    "experiment:v0.3:adjudicate": "tsx packages/cli/src/index.ts adjudicate",
+    "experiment:v0.3:report": "tsx packages/cli/src/index.ts experiment-report-v03"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",

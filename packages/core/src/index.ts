@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { resolve, relative, sep } from "node:path";
 import { z } from "zod";
 
@@ -53,9 +54,31 @@ export type ReviewerAdapter = { name: string; version?: string; review(input: Re
 
 export const RunResultSchema = z.object({
   schemaVersion: z.literal("1"), benchmarkVersion: z.string(), reviewer: z.object({ name: z.string(), version: z.string().optional() }),
-  createdAt: z.string(), configuration: z.record(z.unknown()).default({}), cases: z.array(z.object({ caseId: z.string(), raw: z.unknown(), output: ReviewOutputSchema }))
+  createdAt: z.string(), runId: z.string().optional(), configurationId: z.string().optional(), repetition: z.number().int().positive().optional(), startedAt: z.string().optional(), completedAt: z.string().optional(), configuration: z.record(z.unknown()).default({}), cases: z.array(z.object({ caseId: z.string(), raw: z.unknown(), output: ReviewOutputSchema }))
 });
 export type RunResult = z.infer<typeof RunResultSchema>;
+
+/** Secret-free, committed description of one controlled v0.3 condition. */
+export const ExperimentConfigurationSchema = z.object({
+  schemaVersion: z.literal("1"), id: z.string().regex(/^[a-z0-9-]+$/), version: z.string().min(1),
+  reviewerType: z.enum(["single-agent", "swarm-review"]), reviewerVersion: z.string().min(1), provider: z.string().min(1), model: z.string().min(1),
+  temperature: z.number().min(0).max(2), maxOutputTokens: z.number().int().positive(), maxCalls: z.number().int().positive(), maxEstimatedCostUsd: z.number().positive(),
+  agentCount: z.number().int().positive(), agentMandates: z.array(z.string().min(1)).min(1), debateRounds: z.number().int().min(0), confidenceThreshold: z.number().min(0).max(1),
+  principal: z.record(z.unknown()), promptVersion: z.string().min(1), benchmarkVersion: z.literal("v0.2"), caseIds: z.array(z.string().min(1)).min(1), repetitions: z.number().int().positive(),
+  environmentMetadataFields: z.array(z.string().min(1)).min(1), notes: z.string().min(1)
+}).superRefine((config, ctx) => {
+  if (config.reviewerType === "single-agent" && (config.agentCount !== 1 || config.debateRounds !== 0)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "single-agent must have one agent and zero debate rounds" });
+  if (config.reviewerType === "swarm-review" && config.agentCount < 2) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "swarm-review must have at least two agents" });
+});
+export type ExperimentConfiguration = z.infer<typeof ExperimentConfigurationSchema>;
+
+export const AdjudicationRecordSchema = z.object({
+  caseId: z.string(), runId: z.string(), submittedFindingId: z.string().nullable().optional(), expectedFindingId: z.string().nullable().optional(),
+  automaticClassification: z.enum(["false-positive", "false-negative", "alias-match", "file-line-match", "duplicate", "severity-disagreement"]),
+  humanClassification: z.enum(["correct-match", "valid-finding-missed-by-matcher", "invalid-finding", "duplicate", "partially-correct", "severity-disagreement", "ambiguous", "requires-case-revision"]),
+  rationale: z.string().min(1), reviewer: z.string().min(1), timestamp: z.string().datetime()
+});
+export type AdjudicationRecord = z.infer<typeof AdjudicationRecordSchema>;
 
 export function readCase(filePath: string): BenchmarkCase {
   return BenchmarkCaseSchema.parse(JSON.parse(readFileSync(filePath, "utf8")));
@@ -65,6 +88,7 @@ export function isSafeRelativePath(root: string, candidate: string): boolean {
 }
 export function validateCase(caseRoot: string, caseDefinition: BenchmarkCase): string[] {
   const errors: string[] = [];
+  try { execFileSync("git", ["rev-parse", "--verify", `${caseDefinition.repository.baseCommit}^{commit}`], { stdio: "ignore" }); } catch { errors.push(`${caseDefinition.id}: baseCommit does not resolve to a local commit`); }
   if (!isSafeRelativePath(caseRoot, caseDefinition.repository.patchPath)) errors.push(`${caseDefinition.id}: patchPath escapes benchmark directory`);
   else if (!existsSync(resolve(caseRoot, caseDefinition.repository.patchPath))) errors.push(`${caseDefinition.id}: patch does not exist`);
   const patchFile = resolve(caseRoot, caseDefinition.repository.patchPath);
