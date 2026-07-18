@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1-beta — Live smoke-test validation — 2026-07-18
+
+- Added preserved successful OpenAI-backed smoke artifacts for the single-agent, no-debate swarm, and one-round debate swarm configurations.
+- Added a durable local smoke-budget ledger shared across CLI processes, with atomic writes, exclusive locking, conservative ambiguous-usage handling, and offline status/audit commands.
+- Added ledger persistence, settlement, failure, locking, reconciliation, migration, and ceiling-enforcement coverage.
+- This patch validates the live experiment pipeline end to end; the one-case, one-repetition smoke test is not benchmark-comparison evidence. Issue #15 remains open for any separately authorized larger experiment.
+
 ## 0.3.0-beta — Preliminary experimental release — 2026-07-18
 
 - Added controlled v0.3 single-agent, no-debate swarm, and debate swarm configurations.
