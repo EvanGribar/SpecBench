@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.3.0-experimental — 2026-07-18
+## 0.3.0-beta — Preliminary experimental release — 2026-07-18
 
 - Added controlled v0.3 single-agent, no-debate swarm, and debate swarm configurations.
 - Added explicit dry-run, unique run artifacts, failure preservation, repetition scoring, and preliminary report exports.
-- Added readiness and external case-review documentation; results remain preliminary until live runs and adjudication are complete.
+- Added readiness and external case-review documentation; results remain preliminary until live runs and adjudication are complete. Live execution is tracked separately in issue #15.
 
 ## 0.2.0 — Experimental — 2026-07-18
 
