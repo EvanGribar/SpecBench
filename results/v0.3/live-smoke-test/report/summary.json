@@ -1,18 +1,18 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-07-18T22:38:10.165Z",
+  "generatedAt": "2026-07-18T22:38:55.635Z",
   "status": "preliminary",
   "automatic": [
     {
       "configurationId": "v03-smoke-single-agent",
-      "repetitions": 2,
+      "repetitions": 3,
       "automatic": {
         "truePositives": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "falsePositives": {
           "mean": 0,
@@ -22,39 +22,39 @@
           "standardDeviation": 0
         },
         "falseNegatives": {
-          "mean": 1,
+          "mean": 0.6666666666666666,
           "median": 1,
-          "min": 1,
+          "min": 0,
           "max": 1,
-          "standardDeviation": 0
+          "standardDeviation": 0.4714045207910317
         },
         "precision": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "recall": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "f1": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "severityWeightedRecall": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "criticalIssueDetectionRate": {
           "mean": 0,
@@ -64,18 +64,18 @@
           "standardDeviation": 0
         },
         "averageFindingsPerCase": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "runtimeMs": {
-          "mean": 0,
+          "mean": 632.3333333333334,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1897,
+          "standardDeviation": 894.254375940587
         },
         "estimatedCostUsd": {
           "mean": 0,
@@ -85,18 +85,18 @@
           "standardDeviation": 0
         },
         "casesWithAllExpectedFindings": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "casesWithZeroValidFindings": {
-          "mean": 1,
+          "mean": 0.6666666666666666,
           "median": 1,
-          "min": 1,
+          "min": 0,
           "max": 1,
-          "standardDeviation": 0
+          "standardDeviation": 0.4714045207910317
         },
         "costPerCase": {
           "mean": 0,
@@ -113,11 +113,11 @@
           "standardDeviation": 0
         },
         "runtimePerCase": {
-          "mean": 0,
+          "mean": 632.3333333333334,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1897,
+          "standardDeviation": 894.254375940587
         }
       },
       "perCase": [
@@ -137,20 +137,29 @@
           "falsePositives": 0,
           "falseNegatives": 1,
           "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        },
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 1,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "runtimeMs": 1897,
           "estimatedCostUsd": 0
         }
       ]
     },
     {
       "configurationId": "v03-smoke-swarm-no-debate",
-      "repetitions": 2,
+      "repetitions": 3,
       "automatic": {
         "truePositives": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "falsePositives": {
           "mean": 0,
@@ -160,39 +169,39 @@
           "standardDeviation": 0
         },
         "falseNegatives": {
-          "mean": 1,
+          "mean": 0.6666666666666666,
           "median": 1,
-          "min": 1,
+          "min": 0,
           "max": 1,
-          "standardDeviation": 0
+          "standardDeviation": 0.4714045207910317
         },
         "precision": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "recall": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "f1": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "severityWeightedRecall": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "criticalIssueDetectionRate": {
           "mean": 0,
@@ -202,18 +211,18 @@
           "standardDeviation": 0
         },
         "averageFindingsPerCase": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "runtimeMs": {
-          "mean": 0,
+          "mean": 1905.3333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 5716,
+          "standardDeviation": 2694.5482408415373
         },
         "estimatedCostUsd": {
           "mean": 0,
@@ -223,18 +232,18 @@
           "standardDeviation": 0
         },
         "casesWithAllExpectedFindings": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "casesWithZeroValidFindings": {
-          "mean": 1,
+          "mean": 0.6666666666666666,
           "median": 1,
-          "min": 1,
+          "min": 0,
           "max": 1,
-          "standardDeviation": 0
+          "standardDeviation": 0.4714045207910317
         },
         "costPerCase": {
           "mean": 0,
@@ -251,11 +260,11 @@
           "standardDeviation": 0
         },
         "runtimePerCase": {
-          "mean": 0,
+          "mean": 1905.3333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 5716,
+          "standardDeviation": 2694.5482408415373
         }
       },
       "perCase": [
@@ -266,6 +275,15 @@
           "falsePositives": 0,
           "falseNegatives": 1,
           "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        },
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 1,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "runtimeMs": 5716,
           "estimatedCostUsd": 0
         },
         {
@@ -281,14 +299,14 @@
     },
     {
       "configurationId": "v03-smoke-swarm-with-debate",
-      "repetitions": 2,
+      "repetitions": 3,
       "automatic": {
         "truePositives": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "falsePositives": {
           "mean": 0,
@@ -298,39 +316,39 @@
           "standardDeviation": 0
         },
         "falseNegatives": {
-          "mean": 1,
+          "mean": 0.6666666666666666,
           "median": 1,
-          "min": 1,
+          "min": 0,
           "max": 1,
-          "standardDeviation": 0
+          "standardDeviation": 0.4714045207910317
         },
         "precision": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "recall": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "f1": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "severityWeightedRecall": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "criticalIssueDetectionRate": {
           "mean": 0,
@@ -340,18 +358,18 @@
           "standardDeviation": 0
         },
         "averageFindingsPerCase": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "runtimeMs": {
-          "mean": 0,
+          "mean": 2567.3333333333335,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 7702,
+          "standardDeviation": 3630.757619132526
         },
         "estimatedCostUsd": {
           "mean": 0,
@@ -361,18 +379,18 @@
           "standardDeviation": 0
         },
         "casesWithAllExpectedFindings": {
-          "mean": 0,
+          "mean": 0.3333333333333333,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 1,
+          "standardDeviation": 0.4714045207910317
         },
         "casesWithZeroValidFindings": {
-          "mean": 1,
+          "mean": 0.6666666666666666,
           "median": 1,
-          "min": 1,
+          "min": 0,
           "max": 1,
-          "standardDeviation": 0
+          "standardDeviation": 0.4714045207910317
         },
         "costPerCase": {
           "mean": 0,
@@ -389,11 +407,11 @@
           "standardDeviation": 0
         },
         "runtimePerCase": {
-          "mean": 0,
+          "mean": 2567.3333333333335,
           "median": 0,
           "min": 0,
-          "max": 0,
-          "standardDeviation": 0
+          "max": 7702,
+          "standardDeviation": 3630.757619132526
         }
       },
       "perCase": [
@@ -414,6 +432,15 @@
           "falseNegatives": 1,
           "runtimeMs": 0,
           "estimatedCostUsd": 0
+        },
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 1,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "runtimeMs": 7702,
+          "estimatedCostUsd": 0
         }
       ]
     }
@@ -422,9 +449,12 @@
   "rawArtifactIndex": [
     "v03-smoke-single-agent-06b461c9-86f6-4b1d-8fc8-2d125c361d89",
     "v03-smoke-single-agent-211af663-196f-4c88-99a5-4f147003bcbd",
+    "v03-smoke-single-agent-83c6d2d2-5a36-4e38-be8b-2cd0e4e39996",
     "v03-smoke-swarm-no-debate-960b3897-25cd-4f69-a6e6-9dd5e0fabc4f",
+    "v03-smoke-swarm-no-debate-e79eb938-9f47-4db3-88d9-4eeeafaa3588",
     "v03-smoke-swarm-no-debate-ef536899-d204-46b8-9ac6-0f4b12e64772",
     "v03-smoke-swarm-with-debate-6162fd74-0ea1-4fa0-86b1-b586769ec840",
-    "v03-smoke-swarm-with-debate-8be1405d-ec0d-403d-8ed4-6e1da8ac5cfe"
+    "v03-smoke-swarm-with-debate-8be1405d-ec0d-403d-8ed4-6e1da8ac5cfe",
+    "v03-smoke-swarm-with-debate-be8b2af6-b673-4160-841f-f61111058f7a"
   ]
 }
