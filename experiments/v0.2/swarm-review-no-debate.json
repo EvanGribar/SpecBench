@@ -1,0 +1,1 @@
+{"schemaVersion":"1","name":"swarm-review-no-debate","benchmarkVersion":"v0.2","reviewer":"swarm-review","mode":"imported-output","debate":false,"cases":"all","store":["raw","normalized","configuration","cost","runtime","benchmarkVersion"]}

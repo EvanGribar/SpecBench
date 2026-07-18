@@ -1,0 +1,1 @@
+{"schemaVersion":"1","name":"single-agent-baseline","benchmarkVersion":"v0.2","reviewer":"single-agent","mode":"live-opt-in","cases":"all","maxCalls":10,"maxOutputTokens":1500,"store":["raw","normalized","configuration","cost","runtime","benchmarkVersion"]}

@@ -1,0 +1,10 @@
+diff --git a/apps/reference-saas/lib/notifications.ts b/apps/reference-saas/lib/notifications.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/reference-saas/lib/notifications.ts
+@@ -0,0 +1,10 @@
++const notification = await getNotification(id);
++if (!notification) throw new Error("Notification not found");
++if (notification.status === "sent") return notification;
++notification.attempts += 1;
++await send(notification);

@@ -1,0 +1,1 @@
+{"cases":{"admin-invite-authorization":{"issues":[{"message":"Missing administrator role","body":"Any team member can invite users.","severity":"high","path":"apps/reference-saas/app/api/teams/[teamId]/invites/route.ts","line":12,"confidence":0.9}]}}}

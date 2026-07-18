@@ -1,82 +1,61 @@
 # SpecBench
 
-SpecBench is an early, local-first benchmark for measuring whether AI coding and
-review systems identify violations of explicit product requirements in proposed
-code changes.
+[![CI](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml/badge.svg)](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
-The project is in its planning phase. The v0.1 scope, architecture, acceptance
-criteria, and implementation sequence are defined before benchmark cases or
-reviewer integrations are built.
+SpecBench is a local-first benchmark for measuring whether AI coding and review systems identify violations of explicit product requirements in proposed code changes.
 
-- [Project specification](SPEC.md)
-- [Architecture proposal](ARCHITECTURE.md)
-- [v0.1 issue plan and acceptance criteria](docs/V0.1_ISSUE_PLAN.md)
+`v0.1.0-beta` is implemented: it is the early, three-case benchmark release with deterministic scoring, offline fixtures, a CLI, and static JSON/HTML reports. It is deliberately small and results from it must not be generalized.
 
-## What it will measure
+`v0.2` is the first experimental release candidate. Its 10 distinct cases cover authorization, plan limits, validation, state transitions, product omissions, notifications, cancellations, regression safety, and UX requirements. It still is not a general measure of coding-agent quality, security coverage, code style, or production readiness.
 
-Whether a reviewer identifies seeded product-requirement violations in
-controlled pull-request-style patches, with transparent deterministic scoring.
-
-## What it will not measure
-
-SpecBench v0.1 will not be a general measure of coding-agent quality, security
-coverage, code style, or production readiness. It will not include a hosted
-service, accounts, billing, or a public submission platform.
+- [Specification](SPEC.md)
+- [Architecture](ARCHITECTURE.md)
+- [v0.2 initial-results report](docs/V0.2_INITIAL_RESULTS.md)
 
 ## Quick start
 
-Requires Node.js 20+ and pnpm.
+Requires Node.js 20+ and pnpm. From a fresh clone:
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm validate
 pnpm specbench list
 pnpm specbench run --reviewer json-file --input fixtures/perfect.json --output results/run.json
 pnpm specbench report --results results/run.json
 ```
 
-This runs fully offline using a fixture. Reports are written to `results/` as
-JSON and static HTML. Live model calls are never made by CI and require explicit
-credentials and adapter configuration.
+This is fully offline. CI uses the same fixture pathway and never makes a live model call. A live single-agent run requires explicit credentials and adapter configuration.
 
-## Scoring
+Example terminal output from the final command:
 
-The default matcher is deterministic: explicit requirement ids, then file/line
-overlap, then a case-defined alias match. Each expected and submitted finding can
-match only once; duplicate submitted findings are false positives. The report
-shows precision, recall, F1, severity-weighted recall, critical detection rate,
-runtime, cost, and every missed or false-positive finding. See [SPEC.md](SPEC.md)
-for the full matching contract.
+```text
+Reviewer: json-file
+Cases: 10
+TP 10 | FP 0 | FN 0
+Precision 100.0% | Recall 100.0% | F1 100.0%
+Weighted recall 100.0% | Critical detection 100.0%
+Runtime 420ms | Estimated cost $0.0000
+Wrote results/report.json and results/report.html
+```
 
-## Extending the benchmark
+The generated HTML begins with a static metric table and per-case evidence:
 
-To add a case, create `benchmarks/v0.1/<case-id>/case.json` and `patch.diff`,
-then run `pnpm validate`. Definitions are versioned JSON and Zod-validated. To
-add a reviewer, implement the small `ReviewerAdapter` interface in
-`packages/adapters`; adapters return normalized findings and must not require a
-hosted SpecBench service. See [CONTRIBUTING.md](CONTRIBUTING.md).
+```html
+<h1>SpecBench report</h1>
+<tr><td>True positives</td><td>10</td></tr>
+<h2>admin-invite-authorization — Member can create team invitations</h2>
+```
 
-## Reproducing results
+## Scoring and cases
 
-Published result files should identify their benchmark version, reviewer,
-configuration, timestamp, raw normalized findings, runtime, and estimated cost.
-Run `specbench score` or `specbench report` against the result JSON to reproduce
-the report without model access.
+Matching is deterministic: requirement identifiers, then file/line overlap, then case-defined aliases. A submitted finding can satisfy only one expected finding; duplicates become false positives. Each v0.2 case records the explicit requirement, seeded violation, severity, source location, impact, acceptable descriptions, and a plausible non-issue.
+
+Fixture outputs cover a perfect review, high recall with false positives, high precision with misses, duplicate findings, an incorrect severity, and total failure. Experiment configurations for the single-agent baseline and Swarm Review with and without debate are in [`experiments/v0.2`](experiments/v0.2). Published experiment results must retain raw output, normalized output, configuration metadata, cost, runtime, and benchmark version.
 
 ## Limitations
 
-SpecBench is an early benchmark, not an industry standard or universal measure
-of coding-agent quality. It measures controlled violations of explicit product
-requirements; it does not establish security coverage, general code quality, or
-production readiness. Deterministic matching may miss a valid but unusually
-worded finding.
-
-## Project documents
-
-- [Specification](SPEC.md) and [architecture](ARCHITECTURE.md)
-- [v0.1 issue plan](docs/V0.1_ISSUE_PLAN.md)
-- [Roadmap](ROADMAP.md), [changelog](CHANGELOG.md), and [security policy](SECURITY.md)
-- [Contributing guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md)
+The current v0.2 suite has only 10 cases. It is an experimental controlled suite, not an industry standard; do not generalize results until real baseline runs have been completed and manually inspected. The static initial-results report intentionally makes no performance claims.
 
 ## License
 

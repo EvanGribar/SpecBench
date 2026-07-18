@@ -1,0 +1,9 @@
+diff --git a/apps/reference-saas/lib/reminders.ts b/apps/reference-saas/lib/reminders.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/reference-saas/lib/reminders.ts
+@@ -0,0 +1,7 @@
++const user = await getUser(userId);
++if (!user) throw new Error("User not found");
++const message = buildReminder(user);
++await sendEmail(user.email, message);
