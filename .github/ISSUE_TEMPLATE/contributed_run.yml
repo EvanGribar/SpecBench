@@ -1,0 +1,62 @@
+name: Contributed benchmark run
+description: Submit reproducible model-run metadata for review
+title: "[Run] "
+labels: [contributed-run]
+body:
+  - type: input
+    id: benchmark-version
+    attributes:
+      label: Benchmark version
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Exact commit SHA
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: Provider
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Exact model identifier
+    validations:
+      required: true
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration and prompt/adapter changes
+    validations:
+      required: true
+  - type: input
+    id: repetitions
+    attributes:
+      label: Repetitions
+    validations:
+      required: true
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Raw artifact location and normalized findings
+    validations:
+      required: true
+  - type: textarea
+    id: accounting
+    attributes:
+      label: Token usage, cost, runtime, failures, and retries
+    validations:
+      required: true
+  - type: checkboxes
+    id: integrity
+    attributes:
+      label: Integrity confirmations
+      options:
+        - label: I confirm outputs were not manually edited.
+          required: true
+        - label: I confirm secrets were removed.
+          required: true

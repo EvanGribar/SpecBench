@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+title: SpecBench
+message: Please cite SpecBench when using its benchmark cases, scoring, or reports.
+type: software
+authors:
+  - family-names: Gribar
+    given-names: Evan
+repository-code: https://github.com/EvanGribar/SpecBench
+url: https://github.com/EvanGribar/SpecBench
+version: 0.3.1-beta
+date-released: 2026-07-18
+license: Apache-2.0
+abstract: Open-source benchmark for testing whether AI code reviewers detect explicit product-requirement violations.

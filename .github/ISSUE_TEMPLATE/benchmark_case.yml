@@ -1,0 +1,60 @@
+name: Benchmark case proposal
+description: Propose a requirement-adherence benchmark case
+title: "[Case] "
+labels: [benchmark-case]
+body:
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Requirement
+    validations:
+      required: true
+  - type: textarea
+    id: violation
+    attributes:
+      label: Seeded violation
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected finding
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - critical
+        - high
+        - medium
+        - low
+    validations:
+      required: true
+  - type: textarea
+    id: reference
+    attributes:
+      label: Patch or reference app change
+    validations:
+      required: true
+  - type: textarea
+    id: distractors
+    attributes:
+      label: Distractors
+  - type: textarea
+    id: matching
+    attributes:
+      label: Matching considerations
+  - type: checkboxes
+    id: incident
+    attributes:
+      label: Provenance
+      options:
+        - label: This case is derived from a real incident (describe it above without confidential details).

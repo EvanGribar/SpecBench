@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="430" viewBox="0 0 1000 430" role="img" aria-labelledby="title desc">
+  <title id="title">Example SpecBench static HTML report</title>
+  <desc id="desc">A simplified browser view of the static SpecBench report with a preliminary banner, score table, and per-case evidence.</desc>
+  <rect width="1000" height="430" rx="18" fill="#eef2f7"/><rect x="25" y="25" width="950" height="380" rx="10" fill="#fff" stroke="#c7d0dc"/>
+  <style>text{font-family:Inter,Arial,sans-serif;fill:#172033}.h{font-size:28px;font-weight:700}.b{font-size:16px;font-weight:700}.s{font-size:15px}.line{stroke:#c7d0dc;stroke-width:1}</style>
+  <text class="h" x="55" y="75">SpecBench v0.3 results</text><text class="s" x="55" y="108">PRELIMINARY · Automatic results are retained separately from human adjudication.</text>
+  <line class="line" x1="55" y1="135" x2="945" y2="135"/><text class="b" x="55" y="165">Configuration</text><text class="b" x="300" y="165">Runs</text><text class="b" x="390" y="165">Precision</text><text class="b" x="520" y="165">Recall</text><text class="b" x="630" y="165">F1</text><text class="b" x="710" y="165">Runtime ms</text>
+  <text class="s" x="55" y="200">v03-smoke-single-agent</text><text class="s" x="300" y="200">3</text><text class="s" x="390" y="200">0.333</text><text class="s" x="520" y="200">0.333</text><text class="s" x="630" y="200">0.333</text><text class="s" x="710" y="200">632</text>
+  <text class="s" x="55" y="235">v03-smoke-swarm-no-debate</text><text class="s" x="300" y="235">3</text><text class="s" x="390" y="235">0.333</text><text class="s" x="520" y="235">0.333</text><text class="s" x="630" y="235">0.333</text><text class="s" x="710" y="235">1905</text>
+  <text class="s" x="55" y="270">v03-smoke-swarm-with-debate</text><text class="s" x="300" y="270">3</text><text class="s" x="390" y="270">0.333</text><text class="s" x="520" y="270">0.333</text><text class="s" x="630" y="270">0.333</text><text class="s" x="710" y="270">2567</text>
+  <line class="line" x1="55" y1="295" x2="945" y2="295"/><text class="b" x="55" y="330">Limitations</text><text class="s" x="55" y="360">Ten controlled cases; three repetitions; directional evidence only.</text><text class="s" x="55" y="384">Requirement-violation detection, not general code-review quality.</text>
+</svg>

@@ -1,15 +1,26 @@
 # Roadmap
 
-## v0.1
+## Current
 
-- Eight validated benchmark cases, local JSON adapter, deterministic scoring, CLI,
-  fixtures, reports, and a compact reference SaaS application.
+- 10 controlled benchmark cases
+- Deterministic scoring
+- Offline fixtures
+- Single-agent and controlled swarm adapters
+- Live smoke-test validation
+- Cost-safe local execution
 
 ## Next
 
-- Expand deliberately beyond the initial eight balanced cases.
-- Complete fixture-backed single-agent and Swarm export comparisons.
-- Publish reproducible baseline result files and failure analysis.
+- Independent review of all cases
+- First outside contributed full run
+- Human adjudication of results
+- Case revisions based on external feedback
+- Additional cases only where evidence identifies coverage gaps
 
-No hosted dashboard, account system, or public leaderboard is planned for the
-initial releases.
+## Later
+
+- Additional providers and adapters
+- More reference applications
+- Better result exploration if contributor demand exists
+
+This roadmap does not commit the project to a hosted SaaS, leaderboard, or BenchLab.

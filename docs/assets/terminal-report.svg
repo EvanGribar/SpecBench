@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="360" viewBox="0 0 1000 360" role="img" aria-labelledby="title desc">
+  <title id="title">Example SpecBench terminal report</title>
+  <desc id="desc">A terminal-style fixture report showing true positives, false positives, false negatives, precision, recall, F1, and artifact paths.</desc>
+  <rect width="1000" height="360" rx="18" fill="#101827"/><circle cx="32" cy="28" r="7" fill="#ff6b6b"/><circle cx="55" cy="28" r="7" fill="#ffd166"/><circle cx="78" cy="28" r="7" fill="#06d6a0"/>
+  <style>text{font-family:Consolas,monospace;font-size:20px;fill:#e8edf5}.green{fill:#7ee787}.muted{fill:#9aa8bc}</style>
+  <text x="35" y="78" class="muted">$ pnpm specbench score --results results/perfect-run.json</text>
+  <text x="35" y="125">Reviewer: json-file</text><text x="35" y="157">Cases: 10</text>
+  <text x="35" y="201" class="green">TP 10 | FP 0 | FN 0</text><text x="35" y="233" class="green">Precision 100.0% | Recall 100.0% | F1 100.0%</text>
+  <text x="35" y="277">Weighted recall 100.0% | Critical detection 100.0%</text><text x="35" y="309">Runtime 420ms | Estimated cost $0.0000</text><text x="35" y="341" class="muted">Wrote results/report.json and results/report.html</text>
+</svg>

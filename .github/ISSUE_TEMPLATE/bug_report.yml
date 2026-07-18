@@ -1,0 +1,63 @@
+name: Bug report
+description: Report a reproducible SpecBench problem
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: SpecBench version
+      placeholder: v0.3.1-beta or commit SHA
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Node and pnpm versions
+      placeholder: Node 20.x, pnpm 10.32.1
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command used
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      description: Remove API keys, tokens, headers, and personal paths.
+      render: text
+  - type: checkboxes
+    id: secrets
+    attributes:
+      label: Secret check
+      options:
+        - label: I confirm no API key or other secret is included.
+          required: true

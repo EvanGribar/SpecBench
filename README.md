@@ -1,16 +1,59 @@
 # SpecBench
 
-SpecBench is a local-first benchmark for explicit product-requirement violations in AI code review. v0.3 is an evidence-focused experimental release: it compares a single reviewer, a controlled swarm without debate, and the same swarm with one debate round.
+SpecBench is an open-source benchmark for testing whether AI code reviewers detect explicit product and business requirement violations in code changes.
 
-Current release: **v0.3.1-beta — Live smoke-test validation.** The live model-backed pipeline has been validated end to end under a durable $1.00 smoke-test cost ceiling. This is execution validation only: one shared case and one repetition do not establish reviewer or architecture superiority. The complete multi-case, repeated baseline study has not been run.
+[![CI](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml/badge.svg)](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml) [![Latest release](https://img.shields.io/github/v/release/EvanGribar/SpecBench?include_prereleases&label=latest%20release)](https://github.com/EvanGribar/SpecBench/releases/tag/v0.3.1-beta) [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
-## v0.3 experiment
+> **Experimental:** the current release is `v0.3.1-beta`. It validates the local experiment pipeline; it does not establish that any reviewer architecture or multi-agent debate approach is superior.
+
+## Why SpecBench exists
+
+Ordinary code-review benchmarks often ask whether a change is generally good, secure, or idiomatic. SpecBench starts with an explicit product requirement, seeds a realistic violation into a patch, and checks whether a reviewer identifies that requirement-level failure.
+
+SpecBench measures requirement-aware review behavior. It is not a general benchmark for code quality, security, or software-engineering ability.
+
+![Requirement to deterministic score flow](docs/assets/requirement-to-score.svg)
+
+## What is included
+
+The repository currently contains 10 controlled `v0.2` cases covering authorization, plan limits, validation, state transitions, product omissions, notifications, cancellations, regressions, and UX requirements. Each case records its requirement, seeded violation, expected finding, severity, source location, aliases, and plausible distractors.
+
+The `v0.3.1-beta` release adds a single-agent configuration, controlled swarm configurations, preserved smoke-test artifacts, deterministic scoring, and a durable local budget ledger. The smoke test is execution evidence only. See the [v0.3 smoke-test documentation](docs/V0.3_LIVE_SMOKE_TEST.md), [current limitations](docs/V0.3_RESULTS.md), and [changelog](CHANGELOG.md).
+
+## Quick start: offline and free
+
+Requires Node.js 20+ and pnpm 10. From a fresh clone:
 
 ```bash
-pnpm install
+git clone https://github.com/EvanGribar/SpecBench.git
+cd SpecBench
+pnpm install --frozen-lockfile
 pnpm validate
+pnpm test
 pnpm experiment:v0.3:dry-run
-# Explicit credentials are required for each live command:
+```
+
+Run a fixture-backed review without an API key:
+
+```bash
+pnpm specbench run --reviewer json-file --fixture perfect --output results/perfect-run.json
+pnpm specbench score --results results/perfect-run.json
+pnpm specbench report --results results/perfect-run.json --json results/perfect-report.json --html results/perfect-report.html
+```
+
+The fixture workflow is deterministic and offline. The generated terminal report and static HTML report are ordinary local artifacts:
+
+![Example terminal report output](docs/assets/terminal-report.svg)
+
+![Example static HTML report](docs/assets/html-report.svg)
+
+See the [fixture workflow](examples/fixture-workflow.md) for additional failure profiles.
+
+## Optional live model workflow
+
+Live commands are opt-in and use the contributor's own provider credentials. They can incur cost. Copy [.env.example](.env.example) to `.env.local`, fill in credentials locally, and never commit `.env.local` or paste keys into issues, logs, or pull requests.
+
+```bash
 pnpm experiment:v0.3:single-agent
 pnpm experiment:v0.3:swarm-no-debate
 pnpm experiment:v0.3:swarm-with-debate
@@ -18,64 +61,32 @@ pnpm experiment:v0.3:score
 pnpm experiment:v0.3:report
 ```
 
-Live runs require `OPENAI_API_KEY`; ordinary validation, tests, and CI never call a model. Raw artifacts are written beneath `results/v0.3/runs/` without overwriting existing files. See `docs/V0.3_EXPERIMENT_READINESS.md`, `docs/case-review/`, and `docs/V0.3_RESULTS.md`.
+For the bounded smoke workflow, use the preflight, budget status, and audit commands described in [the smoke-test guide](docs/V0.3_LIVE_SMOKE_TEST.md). CI never makes live model calls.
 
-[![CI](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml/badge.svg)](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+## Reviewer configurations and scoring
 
-SpecBench is a local-first benchmark for measuring whether AI coding and review systems identify violations of explicit product requirements in proposed code changes.
+Available offline reviewers include `json-file`, `swarm-review` export ingestion, and fixture-backed `single-agent` execution. v0.3 experiment configurations live in [`experiments/v0.3`](experiments/v0.3).
 
-`v0.1.0-beta` is implemented: it is the early, three-case benchmark release with deterministic scoring, offline fixtures, a CLI, and static JSON/HTML reports. It is deliberately small and results from it must not be generalized.
+Matching is deterministic: requirement identifiers, file/line overlap, and case-defined aliases are considered in that order. A submitted finding can satisfy only one expected finding, so duplicates become false positives. Reports include precision, recall, F1, severity-weighted recall, critical-issue detection, false positives, runtime, and estimated cost where available.
 
-`v0.2` is the first experimental release candidate. Its 10 distinct cases cover authorization, plan limits, validation, state transitions, product omissions, notifications, cancellations, regression safety, and UX requirements. It still is not a general measure of coding-agent quality, security coverage, code style, or production readiness.
+![Representative benchmark case](docs/assets/representative-case.svg)
 
-- [Specification](SPEC.md)
-- [Architecture](ARCHITECTURE.md)
-- [v0.2 initial-results report](docs/V0.2_INITIAL_RESULTS.md)
+## Evidence and limitations
 
-## Quick start
+The current suite is small, controlled, and created by the same team as the evaluator. Published artifacts are preliminary until complete repetitions and human adjudication are available. Results are sensitive to prompts, models, randomness, case design, and matching rules. Interpret them as directional, not universal. Do not infer general code-review, security, or engineering ability from them.
 
-Requires Node.js 20+ and pnpm. From a fresh clone:
+## Contributing
 
-```bash
-pnpm install --frozen-lockfile
-pnpm validate
-pnpm specbench list
-pnpm specbench run --reviewer json-file --input fixtures/perfect.json --output results/run.json
-pnpm specbench report --results results/run.json
-```
+Start with [CONTRIBUTING.md](CONTRIBUTING.md), [contributed-run acceptance](docs/CONTRIBUTED_RUNS.md), and the [roadmap](ROADMAP.md). Please use the issue templates for bugs, case proposals, contributed runs, and methodology discussions. See [SECURITY.md](SECURITY.md) for private vulnerability reporting.
 
-This is fully offline. CI uses the same fixture pathway and never makes a live model call. A live single-agent run requires explicit credentials and adapter configuration.
+## Releases and citation
 
-Example terminal output from the final command:
+- [Latest release: v0.3.1-beta](https://github.com/EvanGribar/SpecBench/releases/tag/v0.3.1-beta)
+- [Changelog](CHANGELOG.md)
+- [v0.3 smoke-test report](docs/V0.3_LIVE_SMOKE_TEST.md)
+- [Public-readiness checklist](docs/PUBLIC_LAUNCH_CHECKLIST.md)
 
-```text
-Reviewer: json-file
-Cases: 10
-TP 10 | FP 0 | FN 0
-Precision 100.0% | Recall 100.0% | F1 100.0%
-Weighted recall 100.0% | Critical detection 100.0%
-Runtime 420ms | Estimated cost $0.0000
-Wrote results/report.json and results/report.html
-```
-
-The generated HTML begins with a static metric table and per-case evidence:
-
-```html
-<h1>SpecBench report</h1>
-<tr><td>True positives</td><td>10</td></tr>
-<h2>admin-invite-authorization — Member can create team invitations</h2>
-```
-
-## Scoring and cases
-
-Matching is deterministic: requirement identifiers, then file/line overlap, then case-defined aliases. A submitted finding can satisfy only one expected finding; duplicates become false positives. Each v0.2 case records the explicit requirement, seeded violation, severity, source location, impact, acceptable descriptions, and a plausible non-issue.
-
-Fixture outputs cover a perfect review, high recall with false positives, high precision with misses, duplicate findings, an incorrect severity, and total failure. Experiment configurations for the single-agent baseline and Swarm Review with and without debate are in [`experiments/v0.2`](experiments/v0.2). Published experiment results must retain raw output, normalized output, configuration metadata, cost, runtime, and benchmark version.
-
-## Limitations
-
-The current v0.2 suite has only 10 cases. It is an experimental controlled suite, not an industry standard; do not generalize results until real baseline runs have been completed and manually inspected. The static initial-results report intentionally makes no performance claims.
+If SpecBench supports your work, cite the repository using [CITATION.cff](CITATION.cff). No DOI is assigned.
 
 ## License
 

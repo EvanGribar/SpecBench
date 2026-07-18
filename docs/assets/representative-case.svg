@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="420" viewBox="0 0 1000 420" role="img" aria-labelledby="title desc">
+  <title id="title">Representative SpecBench case</title>
+  <desc id="desc">The admin invitation case pairs a requirement with a seeded patch violation and an expected high severity finding.</desc>
+  <style>text{font-family:Inter,Arial,sans-serif;fill:#172033}.card{fill:#fff;stroke:#52607a;stroke-width:2}.head{font-size:21px;font-weight:700}.body{font-size:17px}.red{fill:#fff1f1;stroke:#b43a3a;stroke-width:2}</style>
+  <rect width="1000" height="420" rx="20" fill="#f5f7fb"/>
+  <rect class="card" x="30" y="30" width="940" height="95" rx="14"/><text class="head" x="55" y="66">admin-invite-authorization</text><text class="body" x="55" y="98">REQ-AUTH-1: Only team administrators may create invitations.</text>
+  <rect class="card" x="30" y="150" width="450" height="225" rx="14"/><text class="head" x="55" y="188">Seeded patch</text><text class="body" x="55" y="226">Membership is checked, but the</text><text class="body" x="55" y="251">administrator role is omitted.</text><text class="body" x="55" y="292">POST /teams/:teamId/invites</text><text class="body" x="55" y="326">regular member → invitation created</text>
+  <rect class="red" x="520" y="150" width="450" height="225" rx="14"/><text class="head" x="545" y="188">Expected finding · high</text><text class="body" x="545" y="226">Invitation creation does not require</text><text class="body" x="545" y="251">an administrator role.</text><text class="body" x="545" y="292">Impact: regular members can expand</text><text class="body" x="545" y="317">a team without authorization.</text>
+</svg>
