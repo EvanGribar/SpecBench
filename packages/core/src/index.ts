@@ -25,6 +25,8 @@ export const BenchmarkCaseSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   requirement: z.string().min(1),
+  seededViolation: z.string().min(1).optional(),
+  whyItMatters: z.string().min(1).optional(),
   repository: z.object({ baseCommit: z.string().min(1), patchPath: z.string().min(1) }),
   expectedFindings: z.array(ExpectedFindingSchema).min(1).superRefine((items, ctx) => {
     const seen = new Set<string>();
@@ -70,6 +72,11 @@ export function validateCase(caseRoot: string, caseDefinition: BenchmarkCase): s
   for (const finding of caseDefinition.expectedFindings) {
     if (finding.file.startsWith("/") || finding.file.includes("..")) errors.push(`${caseDefinition.id}/${finding.id}: invalid file reference`);
     else if (patch && !patch.includes(`b/${finding.file}`)) errors.push(`${caseDefinition.id}/${finding.id}: file is not changed by its patch`);
+  }
+  if (caseRoot.replaceAll("\\", "/").endsWith("/v0.2")) {
+    if (!caseDefinition.seededViolation) errors.push(`${caseDefinition.id}: seededViolation is required for v0.2`);
+    if (!caseDefinition.whyItMatters) errors.push(`${caseDefinition.id}: whyItMatters is required for v0.2`);
+    if (!caseDefinition.distractors.length) errors.push(`${caseDefinition.id}: at least one distractor is required for v0.2`);
   }
   return errors;
 }

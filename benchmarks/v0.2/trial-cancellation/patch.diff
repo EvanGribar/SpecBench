@@ -1,0 +1,10 @@
+diff --git a/apps/reference-saas/lib/billing.ts b/apps/reference-saas/lib/billing.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/reference-saas/lib/billing.ts
+@@ -0,0 +1,7 @@
++const subscription = await getSubscription(subscriptionId);
++if (!subscription) throw new Error("Subscription not found");
++if (subscription.status === "active") return subscription;
++subscription.status = "active";
++await saveSubscription(subscription);
