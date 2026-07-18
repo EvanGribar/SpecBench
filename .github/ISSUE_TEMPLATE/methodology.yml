@@ -1,0 +1,26 @@
+name: Methodology discussion
+description: Discuss metrics, matching, case validity, or experimental design
+title: "[Methodology] "
+labels: [methodology]
+body:
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Metric proposal
+        - Matching concern
+        - Case-validity concern
+        - Experimental-design feedback
+    validations:
+      required: true
+  - type: textarea
+    id: discussion
+    attributes:
+      label: Discussion
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or example

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
+  <title id="title">SpecBench benchmark flow</title>
+  <desc id="desc">A requirement becomes a patched change, a reviewer produces findings, and deterministic scoring compares those findings with the case ground truth.</desc>
+  <style>text{font-family:Inter,Arial,sans-serif;fill:#172033}.box{fill:#f5f7fb;stroke:#52607a;stroke-width:2}.arrow{stroke:#52607a;stroke-width:3;fill:none}.label{font-size:22px;font-weight:700}.small{font-size:16px}</style>
+  <rect width="1200" height="260" rx="20" fill="#ffffff"/>
+  <rect class="box" x="35" y="70" width="220" height="120" rx="14"/><text class="label" x="145" y="112" text-anchor="middle">Requirement</text><text class="small" x="145" y="145" text-anchor="middle">“Only admins may</text><text class="small" x="145" y="166" text-anchor="middle">create invitations.”</text>
+  <path class="arrow" d="M265 130h80m-14-10 14 10-14 10"/>
+  <rect class="box" x="355" y="70" width="220" height="120" rx="14"/><text class="label" x="465" y="112" text-anchor="middle">Patch</text><text class="small" x="465" y="145" text-anchor="middle">Seeded product</text><text class="small" x="465" y="166" text-anchor="middle">requirement violation</text>
+  <path class="arrow" d="M585 130h80m-14-10 14 10-14 10"/>
+  <rect class="box" x="695" y="70" width="220" height="120" rx="14"/><text class="label" x="805" y="112" text-anchor="middle">Findings</text><text class="small" x="805" y="145" text-anchor="middle">Reviewer output</text><text class="small" x="805" y="166" text-anchor="middle">normalized for scoring</text>
+  <path class="arrow" d="M925 130h80m-14-10 14 10-14 10"/>
+  <rect class="box" x="1035" y="70" width="130" height="120" rx="14"/><text class="label" x="1100" y="112" text-anchor="middle">Score</text><text class="small" x="1100" y="145" text-anchor="middle">TP / FP / FN</text><text class="small" x="1100" y="166" text-anchor="middle">Precision, recall</text>
+</svg>
