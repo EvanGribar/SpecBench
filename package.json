@@ -1,6 +1,6 @@
 {
   "name": "specbench",
-  "version": "0.3.0-experimental",
+  "version": "0.3.0-beta",
   "type": "module",
   "private": true,
   "description": "A local-first benchmark for product-requirement adherence in AI code review.",
