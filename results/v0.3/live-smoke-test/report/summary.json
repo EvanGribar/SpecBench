@@ -1,0 +1,430 @@
+{
+  "schemaVersion": "1",
+  "generatedAt": "2026-07-18T22:29:24.911Z",
+  "status": "preliminary",
+  "automatic": [
+    {
+      "configurationId": "v03-smoke-single-agent",
+      "repetitions": 2,
+      "automatic": {
+        "truePositives": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "falsePositives": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "falseNegatives": {
+          "mean": 1,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "standardDeviation": 0
+        },
+        "precision": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "recall": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "f1": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "severityWeightedRecall": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "criticalIssueDetectionRate": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "averageFindingsPerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "runtimeMs": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "estimatedCostUsd": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "casesWithAllExpectedFindings": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "casesWithZeroValidFindings": {
+          "mean": 1,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "standardDeviation": 0
+        },
+        "costPerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "costPerTruePositive": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "runtimePerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        }
+      },
+      "perCase": [
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1,
+          "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        },
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1,
+          "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        }
+      ]
+    },
+    {
+      "configurationId": "v03-smoke-swarm-no-debate",
+      "repetitions": 2,
+      "automatic": {
+        "truePositives": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "falsePositives": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "falseNegatives": {
+          "mean": 1,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "standardDeviation": 0
+        },
+        "precision": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "recall": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "f1": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "severityWeightedRecall": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "criticalIssueDetectionRate": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "averageFindingsPerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "runtimeMs": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "estimatedCostUsd": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "casesWithAllExpectedFindings": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "casesWithZeroValidFindings": {
+          "mean": 1,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "standardDeviation": 0
+        },
+        "costPerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "costPerTruePositive": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "runtimePerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        }
+      },
+      "perCase": [
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1,
+          "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        },
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1,
+          "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        }
+      ]
+    },
+    {
+      "configurationId": "v03-smoke-swarm-with-debate",
+      "repetitions": 2,
+      "automatic": {
+        "truePositives": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "falsePositives": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "falseNegatives": {
+          "mean": 1,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "standardDeviation": 0
+        },
+        "precision": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "recall": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "f1": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "severityWeightedRecall": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "criticalIssueDetectionRate": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "averageFindingsPerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "runtimeMs": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "estimatedCostUsd": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "casesWithAllExpectedFindings": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "casesWithZeroValidFindings": {
+          "mean": 1,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "standardDeviation": 0
+        },
+        "costPerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "costPerTruePositive": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        },
+        "runtimePerCase": {
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "standardDeviation": 0
+        }
+      },
+      "perCase": [
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1,
+          "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        },
+        {
+          "caseId": "admin-invite-authorization",
+          "repetition": 1,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 1,
+          "runtimeMs": 0,
+          "estimatedCostUsd": 0
+        }
+      ]
+    }
+  ],
+  "humanAdjudicated": null,
+  "rawArtifactIndex": [
+    "v03-smoke-single-agent-06b461c9-86f6-4b1d-8fc8-2d125c361d89",
+    "v03-smoke-single-agent-211af663-196f-4c88-99a5-4f147003bcbd",
+    "v03-smoke-swarm-no-debate-960b3897-25cd-4f69-a6e6-9dd5e0fabc4f",
+    "v03-smoke-swarm-no-debate-ef536899-d204-46b8-9ac6-0f4b12e64772",
+    "v03-smoke-swarm-with-debate-6162fd74-0ea1-4fa0-86b1-b586769ec840",
+    "v03-smoke-swarm-with-debate-8be1405d-ec0d-403d-8ed4-6e1da8ac5cfe"
+  ]
+}

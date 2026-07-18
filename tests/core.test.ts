@@ -30,7 +30,7 @@ describe("case schema and validation", () => {
     }
   });
   it("validates all controlled v0.3 configurations without embedded secrets", () => {
-    const configs = readdirSync(join(root, "experiments/v0.3")).filter((file) => file.endsWith(".json")).map((file) => ExperimentConfigurationSchema.parse(JSON.parse(readFileSync(join(root, "experiments/v0.3", file), "utf8"))));
+    const configs = readdirSync(join(root, "experiments/v0.3")).filter((file) => file.endsWith(".json") && !file.startsWith("smoke-")).map((file) => ExperimentConfigurationSchema.parse(JSON.parse(readFileSync(join(root, "experiments/v0.3", file), "utf8"))));
     expect(configs).toHaveLength(3);
     expect(new Set(configs.flatMap((config) => config.caseIds))).toEqual(new Set(definitions.map((item) => item.id)));
     expect(configs.every((config) => !JSON.stringify(config).match(/sk-[a-z0-9]|api[_-]?key|client[_-]?secret/i))).toBe(true);

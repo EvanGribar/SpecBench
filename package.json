@@ -14,6 +14,8 @@
     "typecheck": "tsc --noEmit",
     "build:reference": "pnpm --dir apps/reference-saas build",
     "specbench": "tsx packages/cli/src/index.ts",
+    "specbench:local": "node --env-file-if-exists=.env.local --import tsx packages/cli/src/index.ts",
+    "experiment:v0.3:smoke-preflight": "node --env-file-if-exists=.env.local --import tsx packages/cli/src/index.ts smoke-preflight",
     "experiment:v0.3:dry-run": "tsx packages/cli/src/index.ts experiment --all --dry-run",
     "experiment:v0.3:single-agent": "tsx packages/cli/src/index.ts experiment --config experiments/v0.3/single-agent.json",
     "experiment:v0.3:swarm-no-debate": "tsx packages/cli/src/index.ts experiment --config experiments/v0.3/swarm-no-debate.json",

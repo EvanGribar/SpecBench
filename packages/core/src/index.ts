@@ -54,7 +54,7 @@ export type ReviewerAdapter = { name: string; version?: string; review(input: Re
 
 export const RunResultSchema = z.object({
   schemaVersion: z.literal("1"), benchmarkVersion: z.string(), reviewer: z.object({ name: z.string(), version: z.string().optional() }),
-  createdAt: z.string(), runId: z.string().optional(), configurationId: z.string().optional(), repetition: z.number().int().positive().optional(), startedAt: z.string().optional(), completedAt: z.string().optional(), configuration: z.record(z.unknown()).default({}), cases: z.array(z.object({ caseId: z.string(), raw: z.unknown(), output: ReviewOutputSchema }))
+  createdAt: z.string().optional().default(""), runId: z.string().optional(), configurationId: z.string().optional(), repetition: z.number().int().positive().optional(), startedAt: z.string().optional(), completedAt: z.string().optional(), configuration: z.record(z.unknown()).default({}), cases: z.array(z.object({ caseId: z.string(), raw: z.unknown(), output: ReviewOutputSchema }))
 });
 export type RunResult = z.infer<typeof RunResultSchema>;
 
