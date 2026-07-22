@@ -15,6 +15,9 @@ export const ExpectedFindingSchema = z.object({
   startLine: z.number().int().positive().optional(),
   endLine: z.number().int().positive().optional(),
   requirementReference: z.string().min(1),
+  /** Stable SpecBridge coordinates. Optional to preserve v0.1/v0.2 cases. */
+  requirementId: z.string().min(1).optional(),
+  criterionId: z.string().min(1).optional(),
   acceptableMatches: z.array(z.string().min(1)).default([])
 }).refine((finding) => !finding.endLine || !finding.startLine || finding.endLine >= finding.startLine, {
   message: "endLine must not precede startLine", path: ["endLine"]
@@ -31,7 +34,8 @@ export const BenchmarkCaseSchema = z.object({
   repository: z.object({ baseCommit: z.string().min(1), patchPath: z.string().min(1) }),
   expectedFindings: z.array(ExpectedFindingSchema).min(1).superRefine((items, ctx) => {
     const seen = new Set<string>();
-    items.forEach((item, index) => { if (seen.has(item.id)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "duplicate expected finding id", path: [index, "id"] }); seen.add(item.id); });
+    const criteria = new Set<string>();
+    items.forEach((item, index) => { if (seen.has(item.id)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "duplicate expected finding id", path: [index, "id"] }); seen.add(item.id); const key = item.requirementId && item.criterionId ? `${item.requirementId}:${item.criterionId}` : undefined; if (key && criteria.has(key)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "duplicate expected SpecBridge criterion mapping", path: [index, "criterionId"] }); if (key) criteria.add(key); });
   }),
   manualMappings: z.array(z.object({ expectedFindingId: z.string().min(1), findingId: z.string().min(1) })).default([]),
   distractors: z.array(z.object({ description: z.string().min(1), reasonNotAnIssue: z.string().min(1) })).default([])
@@ -45,8 +49,17 @@ export const NormalizedFindingSchema = z.object({
 });
 export type NormalizedFinding = z.infer<typeof NormalizedFindingSchema>;
 
+export const SpecBridgeStatusSchema = z.enum(["satisfied", "violated", "not_verifiable", "not_applicable"]);
+export type SpecBridgeStatus = z.infer<typeof SpecBridgeStatusSchema>;
+export const CriterionResultSchema = z.object({
+  requirementId: z.string().min(1), criterionId: z.string().min(1), status: SpecBridgeStatusSchema,
+  explanation: z.string().min(1), confidence: z.number().min(0).max(1).optional(),
+  evidence: z.array(z.object({ path: z.string().min(1), startLine: z.number().int().positive(), endLine: z.number().int().positive().optional(), uri: z.string().url().optional() })).default([])
+});
+export type CriterionResult = z.infer<typeof CriterionResultSchema>;
+
 export const ReviewOutputSchema = z.object({
-  findings: z.array(NormalizedFindingSchema), raw: z.unknown().optional(), runtimeMs: z.number().nonnegative().optional(), estimatedCostUsd: z.number().nonnegative().optional(), metadata: z.record(z.unknown()).default({})
+  findings: z.array(NormalizedFindingSchema), raw: z.unknown().optional(), runtimeMs: z.number().nonnegative().optional(), estimatedCostUsd: z.number().nonnegative().optional(), metadata: z.record(z.unknown()).default({}), criterionResults: z.array(CriterionResultSchema).optional()
 });
 export type ReviewOutput = z.infer<typeof ReviewOutputSchema>;
 export type ReviewInput = { benchmarkVersion: string; case: BenchmarkCase; patch: string; dryRun?: boolean; maxOutputTokens?: number };

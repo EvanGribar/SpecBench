@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0-beta — Native SpecBridge coverage ingestion — 2026-07-21
+
+- Added the `specbridge` adapter for validated, deterministic `coverage.json` ingestion using the actual pinned SpecBridge core.
+- Added additive benchmark criterion mappings and criterion-level status, accuracy, abstention, applicability, contradiction, coverage, and evidence metrics.
+- Added the provenance-pinned Swarm-Review v1.1.0 offline fixture. It validates integration behavior only, not live-model quality.
+
 ## 0.3.1-beta — Live smoke-test validation — 2026-07-18
 
 - Added preserved successful OpenAI-backed smoke artifacts for the single-agent, no-debate swarm, and one-round debate swarm configurations.

@@ -1,0 +1,8 @@
+# SpecBridge ingestion plan
+
+- **Dependency:** SpecBridge is not published at the pinned revision, so SpecBench uses the same pinned git-submodule plus thin local bridge pattern as Swarm-Review. Migration path: replace the bridge with a versioned published `@specbridge/core` dependency after a compatible release.
+- **Mapping and matching:** `requirementId` and `criterionId` are additive expected-finding fields. Existing cases remain valid. Matching is deterministic: manual mapping, expected finding ID, requirement+criterion, globally unambiguous criterion, file/line overlap, then aliases. A submitted result is consumed once.
+- **Semantics and metrics:** all four coverage statuses are retained. Only `violated` can be a detected seeded violation; satisfied is a contradiction, not-verifiable an abstention, and not-applicable an applicability error. Criterion precision/recall/F1 use null for undefined denominators.
+- **Evidence and provenance:** SpecBridge validates paths and line ranges; normalized output retains all evidence, raw coverage, execution metadata, reviewer identity, and fixture provenance. Evidence validity is separate from detection correctness.
+- **Compatibility and reports:** finding-level scoring and report schema remain intact; criterion metrics, status counts, and criterion rows are additive. Reports remain static and offline.
+- **Fixture and release:** the Swarm-Review offline artifact is pinned with provenance and is not live-model-quality evidence. This change adds an adapter and metric surface, so the established prerelease/minor convention governs release selection.

@@ -1,0 +1,3 @@
+[submodule "vendor/specbridge"]
+	path = vendor/specbridge
+	url = https://github.com/EvanGribar/SpecBridge.git
