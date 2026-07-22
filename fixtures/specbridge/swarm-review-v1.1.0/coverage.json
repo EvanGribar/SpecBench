@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0",
+  "contractId": "offline-project-limits",
+  "reviewer": { "name": "swarm-review", "version": "offline-validation" },
+  "target": { "repository": "offline/validation" },
+  "requirements": [{ "requirementId": "REQ-FREE-3", "severity": "blocking", "criteria": [
+    { "criterionId": "api-rejects-fourth", "status": "satisfied", "explanation": "The API count guard rejects the fourth project.", "evidence": [], "confidence": 0.94 },
+    { "criterionId": "ui-upgrade-prompt", "status": "violated", "explanation": "The UI limit branch does not render an upgrade prompt.", "evidence": [{ "path": "src/api/projects.ts", "startLine": 12, "endLine": 14 }], "confidence": 0.96 },
+    { "criterionId": "existing-projects-unchanged", "status": "not_verifiable", "explanation": "The changed API path does not expose mutation behavior for existing projects.", "evidence": [], "confidence": 0.61 }
+  ] }]
+}

@@ -4,7 +4,7 @@ SpecBench is an open-source benchmark for testing whether AI code reviewers dete
 
 [![CI](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml/badge.svg)](https://github.com/EvanGribar/SpecBench/actions/workflows/ci.yml) [![Latest release](https://img.shields.io/github/v/release/EvanGribar/SpecBench?include_prereleases&label=latest%20release)](https://github.com/EvanGribar/SpecBench/releases/tag/v0.3.1-beta) [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
-> **Experimental:** the current release is `v0.3.1-beta`. It validates the local experiment pipeline; it does not establish that any reviewer architecture or multi-agent debate approach is superior.
+> **Experimental:** the current release is `v0.4.0-beta`. It adds native offline SpecBridge coverage ingestion; it does not establish that any reviewer architecture or multi-agent debate approach is superior.
 
 ## Why SpecBench exists
 
@@ -39,6 +39,13 @@ Run a fixture-backed review without an API key:
 pnpm specbench run --reviewer json-file --fixture perfect --output results/perfect-run.json
 pnpm specbench score --results results/perfect-run.json
 pnpm specbench report --results results/perfect-run.json --json results/perfect-report.json --html results/perfect-report.html
+```
+
+Ingest a native SpecBridge coverage artifact (also fully offline):
+
+```bash
+pnpm specbench run --reviewer specbridge --input fixtures/specbridge/swarm-review-v1.1.0/coverage.json --max-cases 1 --output results/specbridge-run.json
+pnpm specbench score --results results/specbridge-run.json
 ```
 
 The fixture workflow is deterministic and offline. The generated terminal report and static HTML report are ordinary local artifacts:

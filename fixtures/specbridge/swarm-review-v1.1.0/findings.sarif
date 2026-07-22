@@ -1,0 +1,1 @@
+{"version":"2.1.0","runs":[{"tool":{"driver":{"name":"swarm-review"}},"results":[{"ruleId":"specbridge/REQ-FREE-3/ui-upgrade-prompt","message":{"text":"The UI limit branch does not render an upgrade prompt."},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"src/api/projects.ts"},"region":{"startLine":12,"endLine":14}}}]}]}]}

@@ -1,0 +1,1 @@
+{"findings":[{"id":"REQ-FREE-3:ui-upgrade-prompt:0","title":"ui-upgrade-prompt","description":"The UI limit branch does not render an upgrade prompt.","file":"src/api/projects.ts","startLine":12,"endLine":14,"confidence":0.96,"requirementReference":"REQ-FREE-3"}],"statusCounts":{"satisfied":1,"violated":1,"not_verifiable":1,"not_applicable":0}}

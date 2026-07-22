@@ -1,15 +1,16 @@
 import { writeFileSync } from "node:fs";
 import type { BenchmarkCase, RunResult } from "../../core/src/index.js";
-import { aggregateScores, matchCase, type AggregateMetrics, type CaseScore } from "../../scorer/src/index.js";
+import { aggregateScores, matchCase, matchCriterionCase, type AggregateMetrics, type CaseScore, type CriterionScore } from "../../scorer/src/index.js";
 
-export type ScoredRun = { schemaVersion: "1"; run: RunResult; metrics: AggregateMetrics; cases: Array<{ benchmarkCase: BenchmarkCase; score: CaseScore; findings: RunResult["cases"][number]["output"]["findings"] }> };
+export type ScoredRun = { schemaVersion: "1"; run: RunResult; metrics: AggregateMetrics; cases: Array<{ benchmarkCase: BenchmarkCase; score: CaseScore; criterionScore?: CriterionScore; findings: RunResult["cases"][number]["output"]["findings"] }> };
 export function scoreRun(run: RunResult, benchmarkCases: BenchmarkCase[]): ScoredRun {
-  const cases = run.cases.map((result) => { const benchmarkCase = benchmarkCases.find((item) => item.id === result.caseId); if (!benchmarkCase) throw new Error(`Result references unknown case: ${result.caseId}`); const score = matchCase(benchmarkCase, result.output.findings); return { benchmarkCase, score, findings: result.output.findings }; });
-  return { schemaVersion: "1", run, cases, metrics: aggregateScores(cases.map((item, index) => ({ benchmarkCase: item.benchmarkCase, score: item.score, runtimeMs: run.cases[index].output.runtimeMs, estimatedCostUsd: run.cases[index].output.estimatedCostUsd }))) };
+  const cases = run.cases.map((result) => { const benchmarkCase = benchmarkCases.find((item) => item.id === result.caseId); if (!benchmarkCase) throw new Error(`Result references unknown case: ${result.caseId}`); const score = matchCase(benchmarkCase, result.output.findings); const criterionScore = result.output.criterionResults ? matchCriterionCase(benchmarkCase, result.output.criterionResults) : undefined; return { benchmarkCase, score, criterionScore, findings: result.output.findings }; });
+  return { schemaVersion: "1", run, cases, metrics: aggregateScores(cases.map((item, index) => ({ benchmarkCase: item.benchmarkCase, score: item.score, criterionScore: item.criterionScore, runtimeMs: run.cases[index].output.runtimeMs, estimatedCostUsd: run.cases[index].output.estimatedCostUsd }))) };
 }
 export function terminalSummary(scored: ScoredRun): string {
   const m = scored.metrics; const pct = (value: number | null) => value === null ? "n/a" : `${(value * 100).toFixed(1)}%`;
-  return [`Reviewer: ${scored.run.reviewer.name}${scored.run.reviewer.version ? ` (${scored.run.reviewer.version})` : ""}`, `Cases: ${scored.cases.length}`, `TP ${m.truePositives} | FP ${m.falsePositives} | FN ${m.falseNegatives}`, `Precision ${pct(m.precision)} | Recall ${pct(m.recall)} | F1 ${pct(m.f1)}`, `Weighted recall ${pct(m.severityWeightedRecall)} | Critical detection ${pct(m.criticalIssueDetectionRate)}`, `Runtime ${m.runtimeMs}ms | Estimated cost $${m.estimatedCostUsd.toFixed(4)}`].join("\n");
+  const criterion = m.criterion_precision === undefined ? [] : [`Criterion TP ${m.criterion_true_positives} | FP ${m.criterion_false_positives} | FN ${m.criterion_false_negatives}`, `Criterion precision ${pct(m.criterion_precision ?? null)} | recall ${pct(m.criterion_recall ?? null)} | F1 ${pct(m.criterion_f1 ?? null)}; abstentions ${m.criterion_abstentions}, applicability errors ${m.criterion_applicability_errors}, contradictions ${m.criterion_contradictions}`];
+  return [`Reviewer: ${scored.run.reviewer.name}${scored.run.reviewer.version ? ` (${scored.run.reviewer.version})` : ""}`, `Cases: ${scored.cases.length}`, `TP ${m.truePositives} | FP ${m.falsePositives} | FN ${m.falseNegatives}`, `Precision ${pct(m.precision)} | Recall ${pct(m.recall)} | F1 ${pct(m.f1)}`, `Weighted recall ${pct(m.severityWeightedRecall)} | Critical detection ${pct(m.criticalIssueDetectionRate)}`, ...criterion, `Runtime ${m.runtimeMs}ms | Estimated cost $${m.estimatedCostUsd.toFixed(4)}`].join("\n");
 }
 function escapeHtml(value: string): string { return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;"); }
 export function renderHtmlReport(scored: ScoredRun): string {

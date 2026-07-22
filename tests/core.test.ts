@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BenchmarkCaseSchema, ExperimentConfigurationSchema, NormalizedFindingSchema, validateCase } from "../packages/core/src/index.js";
-import { aggregateScores, matchCase } from "../packages/scorer/src/index.js";
+import { aggregateScores, matchCase, matchCriterionCase } from "../packages/scorer/src/index.js";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 const root = process.cwd();
@@ -46,4 +46,11 @@ describe("matching and metrics", () => {
   it("never lets one submitted finding satisfy multiple expected findings", () => { const twoFindings = { ...admin, expectedFindings: [admin.expectedFindings[0], { ...admin.expectedFindings[0], id: "second-admin-finding", title: "Second authorization requirement" }] }; const score = matchCase(twoFindings, [exact]); expect(score.matches).toHaveLength(1); expect(score.missedFindingIds).toEqual(["second-admin-finding"]); });
   it("returns null ratios for empty results", () => { const metrics = aggregateScores([]); expect(metrics.precision).toBeNull(); expect(metrics.recall).toBeNull(); expect(metrics.averageFindingsPerCase).toBe(0); });
   it("calculates precision, recall, and weights", () => { const score = matchCase(admin, [exact, { title: "Noise", description: "not expected", file: "other.ts" }]); const metrics = aggregateScores([{ benchmarkCase: admin, score }]); expect(metrics.precision).toBe(0.5); expect(metrics.recall).toBe(1); expect(metrics.severityWeightedRecall).toBe(1); });
+  it("retains SpecBridge abstentions, contradictions, and applicability errors", () => {
+    const mapped = { ...admin, expectedFindings: [{ ...admin.expectedFindings[0], requirementId: "REQ-AUTH-1", criterionId: "role-check" }] };
+    const score = matchCriterionCase(mapped, [{ requirementId: "REQ-AUTH-1", criterionId: "role-check", status: "satisfied", explanation: "incorrect", evidence: [] }]);
+    expect(score).toMatchObject({ falseNegatives: 1, contradictions: 1, abstentions: 0 });
+    const abstention = matchCriterionCase(mapped, [{ requirementId: "REQ-AUTH-1", criterionId: "role-check", status: "not_verifiable", explanation: "no evidence", evidence: [] }]);
+    expect(abstention.abstentions).toBe(1);
+  });
 });
